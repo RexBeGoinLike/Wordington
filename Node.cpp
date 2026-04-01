@@ -1,6 +1,12 @@
 #include "Node.h"
 #include <algorithm>
 
+Node::Node(int id, NodeType type, int capacity, int speed, Direction inputDir, Direction outputDir, int inputCount, int outputCount)
+    : id(id), type(type), capacity(capacity), speed(speed), inputDirection(inputDir), outputDirection(outputDir), inputCount(inputCount), outputCount(outputCount) {}
+
+Node::Node(Node* other)
+    : id(other->id), type(other->type), capacity(other->capacity), speed(other->speed), inputDirection(other->inputDirection), outputDirection(other->outputDirection), inputCount(other->inputCount), outputCount(other->outputCount) {}
+    
 //Getters and Setters
 int Node::getId() {
     return id;
@@ -36,6 +42,14 @@ Direction Node::getInputDirection() {
 
 Direction Node::getOutputDirection() {
     return outputDirection;
+}
+
+void Node::setInputDirection(Direction dir) {
+    inputDirection = dir;
+}
+
+void Node::setOutputDirection(Direction dir) {
+    outputDirection = dir;
 }
 
 const vector<Node*>& Node::getInputConnections() {

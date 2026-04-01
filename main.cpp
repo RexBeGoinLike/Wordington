@@ -12,11 +12,14 @@ int main () {
     const int gridRows = 20;
     const int gridCols = 20;
     const int cellSize = 50;
- 
+    
+    int rotation = 0;
     Grid grid(gridRows, gridCols, cellSize);
 
     InitWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "Wordington");
     SetTargetFPS(60);
+
+    Grid::LoadGridAssets();
     
     
     Node* newNode = new Node(1, NodeType::SOURCE, 10, 1, Direction::UP, Direction::DOWN, 1, 1);
@@ -39,6 +42,38 @@ int main () {
         }else if (IsKeyDown(KEY_FOUR)){                 
             newNode->setType(NodeType::RECEIVER);
         }
+
+        if (IsKeyDown(KEY_R))
+        {
+            rotation = (rotation + 1) % 4;
+            switch (rotation)
+            {
+            case 0:
+                newNode->setOutputDirection(Direction::UP);
+                newNode->setInputDirection(Direction::DOWN);
+                break;
+            
+            case 1:
+                
+                newNode->setOutputDirection(Direction::RIGHT);
+                newNode->setInputDirection(Direction::LEFT);
+                break;  
+
+            case 2:
+                newNode->setOutputDirection(Direction::DOWN);
+                newNode->setInputDirection(Direction::UP);
+                break;      
+
+            case 3:
+                newNode->setOutputDirection(Direction::LEFT);
+                newNode->setInputDirection(Direction::RIGHT);
+                break;
+
+            default:
+                break;
+            }
+        }
+        
 
         BeginDrawing();
             ClearBackground(BLACK);

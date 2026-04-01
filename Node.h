@@ -27,25 +27,26 @@ private:
     int x, y;
 
 public:
-    Node(int id, NodeType type, int capacity, int speed, Direction inputDir, Direction outputDir, int inputCount, int outputCount) 
-        : id(id), type(type), capacity(capacity), speed(speed), inputDirection(inputDir), outputDirection(outputDir), inputCount(inputCount), outputCount(outputCount) {}
+    Node(int id, NodeType type, int capacity, int speed, Direction inputDir, Direction outputDir, int inputCount, int outputCount);
+    Node(Node* other);
 
-    Node(Node* other) 
-        : id(other->id), type(other->type), capacity(other->capacity), speed(other->speed), 
-          inputDirection(other->inputDirection), outputDirection(other->outputDirection), 
-          inputCount(other->inputCount), outputCount(other->outputCount) {}
-          
     int getId();
     NodeType getType();
     void setType(NodeType newType);
     int getCapacity();
     int getSpeed();
+
     int getInputCount();
     int getOutputCount();
+
     Direction getInputDirection();
     Direction getOutputDirection();
+    void setInputDirection(Direction dir);
+    void setOutputDirection(Direction dir);
+
     const vector<Node*>& getInputConnections();
     const vector<string>& getDataBuffer();
+    
     void addInputConnection(Node* node);
     void addOutputConnection(Node* node);
     void removeInputConnection(Node* node);
@@ -56,7 +57,8 @@ public:
     string sendData();
 
     void update();
-
+    void onPlace();
+    
     bool isFull();
 
 

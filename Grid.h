@@ -11,6 +11,8 @@ class Grid
         Grid(int r, int c, int size);    
         void drawGrid(Node* tempNode);
         void updateCell(int row, int col, Node* node);
+        static void LoadGridAssets();
+        
     private:
         int rows;
         int cols;
