@@ -1,7 +1,8 @@
 #include <iostream>
 #include <raylib.h>
-#include <vector>
-#include "Classes/InputNode.h"
+#include "Grid.h"
+#include "Node.h"
+
 using namespace std;
 
 int main () {
@@ -11,57 +12,38 @@ int main () {
     const int gridRows = 20;
     const int gridCols = 20;
     const int cellSize = 50;
-    Color color = GREEN;
-    vector<vector<InputNode>> grid(gridRows, vector<InputNode>(gridCols));
+ 
+    Grid grid(gridRows, gridCols, cellSize);
 
     InitWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "Wordington");
     SetTargetFPS(60);
+    
+    
+    Node* newNode = new Node(1, NodeType::INPUT, 10, 1, Direction::UP, Direction::DOWN, 1, 1);
 
     while (WindowShouldClose() == false){
-        auto mousePos = GetMousePosition();
-        int hoveredRow = (int)(mousePos.y / cellSize);
-        int hoveredCol = (int)(mousePos.x / cellSize);
 
-        //Change Color
-        if (IsKeyDown(KEY_ONE))
-        {
-            color = GREEN;
-        }
-        else if (IsKeyDown(KEY_TWO))
-        {
-            color = RED;
-        }
-        else if (IsKeyDown(KEY_THREE))
-        {
-            color = BLUE;
+        if (IsMouseButtonPressed(MOUSE_LEFT_BUTTON)) {
+            Vector2 mousePos = GetMousePosition();
+            int row = (int)(mousePos.y / cellSize);
+            int col = (int)(mousePos.x / cellSize);
+            grid.updateCell(row, col, newNode);
         }
 
-        //Place Items in Grid
-        if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT)){
-            grid[hoveredRow][hoveredCol].setColor(color);
-            grid[hoveredRow][hoveredCol].setFlag(1);
+        if (IsKeyDown(KEY_ONE)){
+            newNode->setType(NodeType::INPUT);
+        }else if (IsKeyDown(KEY_TWO)){
+            newNode->setType(NodeType::LOGISTICS);
+        }else if (IsKeyDown(KEY_THREE)){
+            newNode->setType(NodeType::FILTER);
+        }else if (IsKeyDown(KEY_FOUR)){                 
+            newNode->setType(NodeType::OUTPUT);
         }
-
 
         BeginDrawing();
             ClearBackground(BLACK);
-            //Draw the grid
-            for (int i = 0; i < gridRows; i++) {
-                for (int j = 0; j < gridCols; j++) {
-                    Rectangle cellRect = { (float)j * cellSize, (float)i * cellSize, (float)cellSize, (float)cellSize };
-                    DrawRectangleLinesEx(cellRect, 1, LIGHTGRAY);
-                    if(hoveredRow == i && hoveredCol == j) {
-                        DrawCircle(cellRect.x + cellSize / 2, cellRect.y + cellSize / 2, cellSize / 4, color);
-                    }
-
-                    if (grid[i][j].getFlag() == 1) {
-                        DrawCircle(cellRect.x + cellSize / 2, cellRect.y + cellSize / 2, cellSize / 4, grid[i][j].getColor());
-                    }
-                }
-            }
-
-  
-     
+   
+            grid.drawGrid(newNode);  
             
         EndDrawing();
     }

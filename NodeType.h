@@ -1,0 +1,1 @@
+enum NodeType { INPUT, LOGISTICS, FILTER, OUTPUT };
