@@ -19,7 +19,7 @@ int main () {
     SetTargetFPS(60);
     
     
-    Node* newNode = new Node(1, NodeType::INPUT, 10, 1, Direction::UP, Direction::DOWN, 1, 1);
+    Node* newNode = new Node(1, NodeType::SOURCE, 10, 1, Direction::UP, Direction::DOWN, 1, 1);
 
     while (WindowShouldClose() == false){
 
@@ -31,13 +31,13 @@ int main () {
         }
 
         if (IsKeyDown(KEY_ONE)){
-            newNode->setType(NodeType::INPUT);
+            newNode->setType(NodeType::SOURCE);
         }else if (IsKeyDown(KEY_TWO)){
             newNode->setType(NodeType::LOGISTICS);
         }else if (IsKeyDown(KEY_THREE)){
             newNode->setType(NodeType::FILTER);
         }else if (IsKeyDown(KEY_FOUR)){                 
-            newNode->setType(NodeType::OUTPUT);
+            newNode->setType(NodeType::RECEIVER);
         }
 
         BeginDrawing();

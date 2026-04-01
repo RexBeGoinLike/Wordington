@@ -7,9 +7,9 @@ Grid::Grid(int r, int c, int size) : rows(r), cols(c), cellSize(size) {
 void drawNode(Node* node, int row, int col, int cellSize) {
     if (node == nullptr) return;
 
-    if (node->getType() == NodeType::INPUT) {
+    if (node->getType() == NodeType::SOURCE) {
         DrawCircle((float)col * cellSize + cellSize / 2, (float)row * cellSize + cellSize / 2, cellSize / 2, BLUE);
-    } else if (node->getType() == NodeType::OUTPUT) {
+    } else if (node->getType() == NodeType::RECEIVER) {
         DrawRectangleRec({ (float)col * cellSize, (float)row * cellSize, (float)cellSize, (float)cellSize }, RED);
     } else if (node->getType() == NodeType::LOGISTICS) {
         DrawRectangle((float)col * cellSize, (float)row * cellSize, (float)cellSize, (float)cellSize, BLUE);

@@ -66,18 +66,18 @@ void Node::removeOutputConnection(Node* node) {
     outputConnections.erase(remove(outputConnections.begin(), outputConnections.end(), node), outputConnections.end());
 }
 
-void Node::receiveData(const string& data) {
-    if (dataBuffer.size() < capacity) {
-        dataBuffer.push_back(data);
-    }
-}
-
 bool Node::isFull() {
     return dataBuffer.size() >= capacity;
 }
 
 
 // Data Processing
+void Node::receiveData(const string& data) {
+    if (dataBuffer.size() < capacity) {
+        dataBuffer.push_back(data);
+    }
+}
+
 string Node::processData() {
     return "";
 }
@@ -85,7 +85,6 @@ string Node::processData() {
 string Node::sendData() {
     return "";
 }
-
 
 
 void Node::update() {
