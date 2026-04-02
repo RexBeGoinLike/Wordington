@@ -12,6 +12,7 @@ class Grid
         void drawGrid(Node* tempNode);
         void updateCell(int row, int col, Node* node);
         static void LoadGridAssets();
+        vector<Node*> getAdjacentNodesInDirection(int row, int col, Direction dir);
         
     private:
         int rows;

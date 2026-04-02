@@ -6,7 +6,7 @@ Node::Node(int id, NodeType type, int capacity, int speed, Direction inputDir, D
 
 Node::Node(Node* other)
     : id(other->id), type(other->type), capacity(other->capacity), speed(other->speed), inputDirection(other->inputDirection), outputDirection(other->outputDirection), inputCount(other->inputCount), outputCount(other->outputCount) {}
-    
+
 //Getters and Setters
 int Node::getId() {
     return id;
@@ -100,6 +100,19 @@ string Node::sendData() {
     return "";
 }
 
+void Node::onPlace(Grid *grid) {
+    for (auto* node : grid->getAdjacentNodesInDirection(x, y, inputDirection)) {
+        if(node->getOutputDirection() == inputDirection) {
+            addInputConnection(node);
+        }
+    }
+    
+    for (auto* node : grid->getAdjacentNodesInDirection(x, y, outputDirection)) {
+        if(node->getInputDirection() == outputDirection) {
+            addOutputConnection(node);
+        }
+    }
+}
 
 void Node::update() {
     

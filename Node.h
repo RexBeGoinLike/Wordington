@@ -1,9 +1,10 @@
 #pragma once
 
 #include "Direction.h"
-#include "NodeType.h"
+#include "NodeType.h" 
 #include <vector>
 #include <string>
+
 
 using namespace std;
 class Node
@@ -57,7 +58,7 @@ public:
     string sendData();
 
     void update();
-    void onPlace();
+    void onPlace(Grid *grid);
     
     bool isFull();
 

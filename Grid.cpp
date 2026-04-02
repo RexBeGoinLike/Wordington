@@ -102,3 +102,24 @@ void Grid::updateCell(int row, int col, Node* node) {
         grid[row][col] = newNode;
     }
 }
+
+vector<Node*> Grid::getAdjacentNodesInDirection(int row, int col, Direction dir) {
+    vector<Node*> adjacentNodes;
+
+    switch (dir) {
+        case Direction::UP:
+            if (row > 0 && grid[row - 1][col]) adjacentNodes.push_back(grid[row - 1][col]);
+            break;
+        case Direction::DOWN:
+            if (row < rows - 1 && grid[row + 1][col]) adjacentNodes.push_back(grid[row + 1][col]);
+            break;
+        case Direction::LEFT:
+            if (col > 0 && grid[row][col - 1]) adjacentNodes.push_back(grid[row][col - 1]);
+            break;
+        case Direction::RIGHT:
+            if (col < cols - 1 && grid[row][col + 1]) adjacentNodes.push_back(grid[row][col + 1]);
+            break;
+    }
+
+    return adjacentNodes;
+}
