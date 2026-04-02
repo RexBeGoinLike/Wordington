@@ -22,25 +22,59 @@ void Grid::LoadGridAssets() {
     filterTexture = LoadTextureFromImage(filterNodeImage);
 }
 
+Texture2D* getTexture(NodeType type)
+{
+    switch (type)
+    {
+        case NodeType::SOURCE: return &sourceTexture;
+        case NodeType::RECEIVER: return &receiverTexture;
+        case NodeType::LOGISTICS: return &logisticsTexture;
+        case NodeType::FILTER: return &filterTexture;
+        default: return nullptr;
+    }
+}
+
 Grid::Grid(int r, int c, int size) : rows(r), cols(c), cellSize(size) {
     grid.resize(rows, vector<Node*>(cols));
 }
 
-void drawNode(Node* node, int row, int col, int cellSize) {
-    if (node == nullptr) return;
+void drawNode(Node* node, int row, int col, int cellSize)
+{
+    if (!node) return;
 
-    if (node->getType() == NodeType::SOURCE) {
-        DrawTexture(sourceTexture, (float)col * cellSize, (float)row * cellSize, WHITE);
-    } else if (node->getType() == NodeType::RECEIVER) {
-        DrawTexture(receiverTexture, (float)col * cellSize, (float)row * cellSize, WHITE);
-    } else if (node->getType() == NodeType::LOGISTICS) {
-        DrawTexture(logisticsTexture, (float)col * cellSize, (float)row * cellSize, WHITE);
-    } else if (node->getType() == NodeType::FILTER) {
-        DrawTexture(filterTexture, (float)col * cellSize, (float)row * cellSize, WHITE);
+    int rotation = 0;
+
+    switch (node->getOutputDirection())
+    {
+        case Direction::UP: rotation = 0; break;
+        case Direction::RIGHT: rotation = 90; break;
+        case Direction::DOWN: rotation = 180; break;
+        case Direction::LEFT: rotation = 270; break;
     }
+
+    Texture2D* texture = getTexture(node->getType());
+    if (!texture) return;
+
+    Rectangle sourceRec = { 0, 0, (float)texture->width, (float)texture->height };
+
+    Rectangle destRec =
+    {
+        (float)col * cellSize + cellSize/2.0f,
+        (float)row * cellSize + cellSize/2.0f,
+        (float)cellSize,
+        (float)cellSize
+    };
+
+    Vector2 origin = { cellSize/2.0f, cellSize/2.0f };
+
+    DrawTexturePro(*texture, sourceRec, destRec, origin, rotation, WHITE);
 }
 
 void Grid::drawGrid(Node* tempNode) {
+    Vector2 mousePos = GetMousePosition();
+    int hoverRow = (int)(mousePos.y / cellSize);
+    int hoverCol = (int)(mousePos.x / cellSize);
+
     for (int i = 0; i < rows; i++) {
         for (int j = 0; j < cols; j++) {
             Rectangle cellRect = { (float)j * cellSize, (float)i * cellSize, (float)cellSize, (float)cellSize };
@@ -51,10 +85,6 @@ void Grid::drawGrid(Node* tempNode) {
             }
 
             if (tempNode != nullptr) {
-                Vector2 mousePos = GetMousePosition();
-                int hoverRow = (int)(mousePos.y / cellSize);
-                int hoverCol = (int)(mousePos.x / cellSize);
-
                 // clamp to grid bounds
                 hoverRow = (hoverRow < 0) ? 0 : (hoverRow > rows - 1) ? rows - 1 : hoverRow;
                 hoverCol = (hoverCol < 0) ? 0 : (hoverCol > cols - 1) ? cols - 1 : hoverCol;

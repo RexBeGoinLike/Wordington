@@ -22,28 +22,28 @@ int main () {
     Grid::LoadGridAssets();
     
     
-    Node* newNode = new Node(1, NodeType::SOURCE, 10, 1, Direction::UP, Direction::DOWN, 1, 1);
+    Node* newNode = new Node(1, NodeType::SOURCE, 10, 1, Direction::DOWN, Direction::UP, 1, 1);
 
     while (WindowShouldClose() == false){
 
-        if (IsMouseButtonPressed(MOUSE_LEFT_BUTTON)) {
+        if (IsMouseButtonDown(MOUSE_LEFT_BUTTON)) {
             Vector2 mousePos = GetMousePosition();
             int row = (int)(mousePos.y / cellSize);
             int col = (int)(mousePos.x / cellSize);
             grid.updateCell(row, col, newNode);
         }
 
-        if (IsKeyDown(KEY_ONE)){
+        if (IsKeyPressed(KEY_ONE)){
             newNode->setType(NodeType::SOURCE);
-        }else if (IsKeyDown(KEY_TWO)){
+        }else if (IsKeyPressed(KEY_TWO)){
             newNode->setType(NodeType::LOGISTICS);
-        }else if (IsKeyDown(KEY_THREE)){
+        }else if (IsKeyPressed(KEY_THREE)){
             newNode->setType(NodeType::FILTER);
-        }else if (IsKeyDown(KEY_FOUR)){                 
+        }else if (IsKeyPressed(KEY_FOUR)){                 
             newNode->setType(NodeType::RECEIVER);
         }
 
-        if (IsKeyDown(KEY_R))
+        if (IsKeyPressed(KEY_R))
         {
             rotation = (rotation + 1) % 4;
             switch (rotation)
