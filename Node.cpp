@@ -1,4 +1,5 @@
 #include "Node.h"
+#include "Grid.h"
 #include <algorithm>
 
 Node::Node(int id, NodeType type, int capacity, int speed, Direction inputDir, Direction outputDir, int inputCount, int outputCount)
@@ -56,6 +57,10 @@ const vector<Node*>& Node::getInputConnections() {
     return inputConnections;
 }
 
+const vector<Node*>& Node::getOutputConnections() {
+    return outputConnections;
+}
+
 const vector<string>& Node::getDataBuffer() {
     return dataBuffer;
 }
@@ -92,26 +97,23 @@ void Node::receiveData(const string& data) {
     }
 }
 
-string Node::processData() {
-    return "";
+void Node::processData() {
+    // Placeholder for processing logic based on node type
 }
 
-string Node::sendData() {
-    return "";
+void Node::sendData() {
+    for(Node* outputNode : outputConnections) {
+        for(const string& data : dataBuffer) {
+            if(!outputNode->isFull()) {
+                outputNode->receiveData(data);
+                dataBuffer.erase(remove(dataBuffer.begin(), dataBuffer.end(), data), dataBuffer.end());
+            }
+        }
+    }
 }
 
 void Node::onPlace(Grid *grid) {
-    for (auto* node : grid->getAdjacentNodesInDirection(x, y, inputDirection)) {
-        if(node->getOutputDirection() == inputDirection) {
-            addInputConnection(node);
-        }
-    }
-    
-    for (auto* node : grid->getAdjacentNodesInDirection(x, y, outputDirection)) {
-        if(node->getInputDirection() == outputDirection) {
-            addOutputConnection(node);
-        }
-    }
+
 }
 
 void Node::update() {

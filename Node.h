@@ -5,8 +5,10 @@
 #include <vector>
 #include <string>
 
-
 using namespace std;
+
+class Grid;
+
 class Node
 {
 private:
@@ -46,6 +48,7 @@ public:
     void setOutputDirection(Direction dir);
 
     const vector<Node*>& getInputConnections();
+    const vector<Node*>& getOutputConnections();
     const vector<string>& getDataBuffer();
     
     void addInputConnection(Node* node);
@@ -53,11 +56,12 @@ public:
     void removeInputConnection(Node* node);
     void removeOutputConnection(Node* node);
 
-    void receiveData(const string& data);
-    string processData();
-    string sendData();
 
-    void update();
+    void receiveData(const string& data);
+    virtual void processData();
+    void sendData();
+    
+    virtual void update();
     void onPlace(Grid *grid);
     
     bool isFull();

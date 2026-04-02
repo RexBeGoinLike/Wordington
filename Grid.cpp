@@ -82,6 +82,9 @@ void Grid::drawGrid(Node* tempNode) {
 
             if(grid[i][j] != nullptr) {
                 drawNode(grid[i][j], i, j, cellSize);
+                if(grid[i][j]->getDataBuffer().size() > 0) {
+                    DrawText(grid[i][j]->getDataBuffer()[0].c_str(), cellRect.x + 5, cellRect.y + 5, 10, RED);
+                }
             }
 
             if (tempNode != nullptr) {
@@ -100,6 +103,7 @@ void Grid::updateCell(int row, int col, Node* node) {
     if (row >= 0 && row < rows && col >= 0 && col < cols) {
         Node* newNode = new Node(*node);
         grid[row][col] = newNode;
+        newNode->onPlace(this);
     }
 }
 

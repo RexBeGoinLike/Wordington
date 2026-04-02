@@ -2,6 +2,7 @@
 #include <raylib.h>
 #include "Grid.h"
 #include "Node.h"
+#include "SourceNode.h"
 
 using namespace std;
 
@@ -21,20 +22,22 @@ int main () {
 
     Grid::LoadGridAssets();
     
+    vector<Node*> nodeList;
     
-    Node* newNode = new Node(1, NodeType::SOURCE, 10, 1, Direction::DOWN, Direction::UP, 1, 1);
+    Node* newNode = new SourceNode(1, 10, 1, Direction::DOWN, Direction::UP, 1, 1);
 
     while (WindowShouldClose() == false){
 
-        if (IsMouseButtonDown(MOUSE_LEFT_BUTTON)) {
+        if (IsMouseButtonPressed(MOUSE_LEFT_BUTTON)) {
             Vector2 mousePos = GetMousePosition();
             int row = (int)(mousePos.y / cellSize);
             int col = (int)(mousePos.x / cellSize);
             grid.updateCell(row, col, newNode);
+            nodeList.push_back(newNode);
         }
 
         if (IsKeyPressed(KEY_ONE)){
-            newNode->setType(NodeType::SOURCE);
+            newNode = new SourceNode(1, 10, 1, Direction::DOWN, Direction::UP, 1, 1);
         }else if (IsKeyPressed(KEY_TWO)){
             newNode->setType(NodeType::LOGISTICS);
         }else if (IsKeyPressed(KEY_THREE)){
@@ -73,7 +76,11 @@ int main () {
                 break;
             }
         }
-        
+
+        for(Node* node : nodeList) {
+            node->update();
+            cout << "Node ID: " << node->getId() << " Type: " << node->getType() << " Buffer Size: " << node->getDataBuffer().size() << endl;
+        }
 
         BeginDrawing();
             ClearBackground(BLACK);
