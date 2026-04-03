@@ -14,7 +14,7 @@ int main () {
     const int gridRows = 20;
     const int gridCols = 20;
     const int cellSize = 50;
-    
+
     int rotation = 0;
     Grid grid(gridRows, gridCols, cellSize);
 
@@ -33,14 +33,11 @@ int main () {
             Vector2 mousePos = GetMousePosition();
             int row = (int)(mousePos.y / cellSize);
             int col = (int)(mousePos.x / cellSize);
-            newNode->onPlace(row, col, &grid);
-            newNode->update();
-            grid.updateCell(row, col, newNode);
-            nodeList.push_back(newNode);
+            nodeList.push_back(grid.updateCell(row, col, newNode));
         }
 
         if (IsKeyPressed(KEY_ONE)){
-            newNode = new SourceNode(1, 10, 1, Direction::DOWN, Direction::UP, 1, 1);
+            newNode = new SourceNode(1, 10, 3, Direction::DOWN, Direction::UP, 1, 1);
         }else if (IsKeyPressed(KEY_TWO)){
             newNode = new LogisticNode(2, 10, 1, Direction::DOWN, Direction::UP, 1, 1);
         }else if (IsKeyPressed(KEY_THREE)){
@@ -80,9 +77,10 @@ int main () {
             }
         }
 
-        for(Node* node : nodeList) {
+        for(Node* node : nodeList) {        
             node->update();
         }
+
 
         BeginDrawing();
             ClearBackground(BLACK);

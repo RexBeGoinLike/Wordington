@@ -105,21 +105,26 @@ void Node::processData() {
 
 void Node::sendData() {
     for(Node* outputNode : outputConnections) {
-        for(const string& data : dataBuffer) {
-            if(!outputNode->isFull()) {
+        if(!outputNode->isFull()){
+            for(const string& data : dataBuffer) {
                 outputNode->receiveData(data);
-                dataBuffer.erase(remove(dataBuffer.begin(), dataBuffer.end(), data), dataBuffer.end());
             }
         }
-    }
+    }   
 }
 
 void Node::onPlace(int row, int col, Grid *grid) {
     for(Node* inputNode : grid->getAdjacentNodesInDirection(row, col, inputDirection)) {
         addInputConnection(inputNode);
         inputNode->addOutputConnection(this);
-        std::cout << "Connected Node " << id << " to Node " << inputNode->getId() << std::endl;
     }
+
+    for(Node* outputNode : grid->getAdjacentNodesInDirection(row, col, outputDirection)) {
+        addOutputConnection(outputNode);
+        outputNode->addInputConnection(this);
+    }
+
+ 
 }
 
 void Node::update() {
