@@ -32,7 +32,11 @@ void MergeNode::onPlace(int row, int col, Grid *grid) {
         }
     }
 
-    cout << "MergeNode placed at (" << row << ", " << col << ") with " << getInputConnections().size() << " inputs and " << getOutputConnections().size() << " outputs." << endl;
+            
+    std::sort(getInputConnections().begin(), getInputConnections().end(), [](Node* a, Node* b) {
+        return static_cast<int>(a->getOutputDirection()) > static_cast<int>(b->getOutputDirection());
+    });
+    
 }
 
 Node* MergeNode::clone() {
