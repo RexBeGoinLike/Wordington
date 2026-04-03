@@ -5,22 +5,26 @@ Texture2D sourceTexture;
 Texture2D receiverTexture;
 Texture2D logisticsTexture;
 Texture2D filterTexture;
+Texture2D tileTexture;
 
 void Grid::LoadGridAssets() {
     Image sourceNodeImage = LoadImage("assets/source.png");
     Image receiverNodeImage = LoadImage("assets/receiver.png");
     Image logisticsNodeImage = LoadImage("assets/logistics.png");
     Image filterNodeImage = LoadImage("assets/filter.png");
+    Image tileImage = LoadImage("assets/tile.png");
 
     ImageResize(&sourceNodeImage, 50, 50);
     ImageResize(&receiverNodeImage, 50, 50);
     ImageResize(&logisticsNodeImage, 50, 50);
     ImageResize(&filterNodeImage, 50, 50);
+    ImageResize(&tileImage, 50, 50);
 
     sourceTexture = LoadTextureFromImage(sourceNodeImage);
     receiverTexture = LoadTextureFromImage(receiverNodeImage);
     logisticsTexture = LoadTextureFromImage(logisticsNodeImage);
     filterTexture = LoadTextureFromImage(filterNodeImage);
+    tileTexture = LoadTextureFromImage(tileImage);
 }
 
 Texture2D* getTexture(NodeType type)
@@ -30,7 +34,7 @@ Texture2D* getTexture(NodeType type)
         case NodeType::SOURCE: return &sourceTexture;
         case NodeType::RECEIVER: return &receiverTexture;
         case NodeType::LOGISTICS: return &logisticsTexture;
-        case NodeType::FILTER: return &filterTexture;
+        case NodeType::MERGE: return &filterTexture;
         default: return nullptr;
     }
 }
@@ -117,8 +121,6 @@ Node* Grid::updateCell(int row, int col, Node* node) {
 
 vector<Node*> Grid::getAdjacentNodesInDirection(int row, int col, Direction dir) {
     vector<Node*> adjacentNodes;
-
-    std::cout << "Checking adjacent nodes for (" << row << ", " << col << ") in direction " << dir << std::endl;
 
     switch (dir) {
         case Direction::UP:

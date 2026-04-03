@@ -1,15 +1,23 @@
 #include "SourceNode.h"
+#include "Grid.h"
 
-void SourceNode::processData(){
-   string data = "give me dat clit baby";
-   receiveData(data);
+string SourceNode::processData(){
+   string data = "A";
+   return data;
 }
 
 void SourceNode::update(){
-    processData();
-    sendData();
+    sendData(processData());
 }
 
 Node* SourceNode::clone(){                  
     return new SourceNode(*this);
+}
+
+void SourceNode::onPlace(int row, int col, Grid *grid){
+
+    for(Node* outputNode : grid->getAdjacentNodesInDirection(row, col, getOutputDirection())) {
+        addOutputConnection(outputNode);
+        outputNode->addInputConnection(this);
+    }
 }

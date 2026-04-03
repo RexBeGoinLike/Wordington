@@ -55,14 +55,14 @@ public:
     void addOutputConnection(Node* node);
     void removeInputConnection(Node* node);
     void removeOutputConnection(Node* node);
-
+    void clearDataBuffer();
 
     void receiveData(const string& data);
-    virtual void processData();
-    void sendData();
+    virtual string processData();
+    void sendData(string data = "");
 
     virtual void update();
-    void onPlace(int row, int col, Grid *grid);
+    virtual void onPlace(int row, int col, Grid *grid);
     
     bool isFull();
 

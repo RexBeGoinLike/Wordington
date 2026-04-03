@@ -1,7 +1,8 @@
 #include "LogisticNode.h"
 
+
 void LogisticNode::update() {
-    sendData();
+    sendData(getDataBuffer().empty() ? "" : getDataBuffer()[0]);
 }
 
 Node* LogisticNode::clone() {

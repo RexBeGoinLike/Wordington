@@ -87,6 +87,10 @@ void Node::removeOutputConnection(Node* node) {
     outputConnections.erase(remove(outputConnections.begin(), outputConnections.end(), node), outputConnections.end());
 }
 
+void Node::clearDataBuffer() {
+    dataBuffer.clear();
+}
+
 bool Node::isFull() {
     return dataBuffer.size() >= capacity;
 }
@@ -99,16 +103,15 @@ void Node::receiveData(const string& data) {
     }
 }
 
-void Node::processData() {
-    // Placeholder for processing logic based on node type
+string Node::processData() {
+    return "";
 }
 
-void Node::sendData() {
+void Node::sendData(string data) {
     for(Node* outputNode : outputConnections) {
         if(!outputNode->isFull()){
-            for(const string& data : dataBuffer) {
-                outputNode->receiveData(data);
-            }
+            outputNode->receiveData(data);
+            clearDataBuffer();
         }
     }   
 }

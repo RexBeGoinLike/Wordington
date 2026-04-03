@@ -4,16 +4,17 @@
 #include "Node.h"
 #include "SourceNode.h"
 #include "LogisticNode.h"
+#include "MergeNode.h"
 
 using namespace std;
 
 int main () {
 
-    const int SCREEN_WIDTH = 800;
-    const int SCREEN_HEIGHT = 600;
-    const int gridRows = 20;
-    const int gridCols = 20;
-    const int cellSize = 50;
+    const int SCREEN_WIDTH = 1600;
+    const int SCREEN_HEIGHT = 900;
+    const int gridRows = 25;
+    const int gridCols = 25;
+    const int cellSize = 64;
 
     int rotation = 0;
     Grid grid(gridRows, gridCols, cellSize);
@@ -37,11 +38,11 @@ int main () {
         }
 
         if (IsKeyPressed(KEY_ONE)){
-            newNode = new SourceNode(1, 10, 3, Direction::DOWN, Direction::UP, 1, 1);
+            newNode = new SourceNode(1, 1, 1, Direction::DOWN, Direction::UP, 1, 1);
         }else if (IsKeyPressed(KEY_TWO)){
-            newNode = new LogisticNode(2, 10, 1, Direction::DOWN, Direction::UP, 1, 1);
+            newNode = new LogisticNode(2, 1, 1, Direction::DOWN, Direction::UP, 1, 1);
         }else if (IsKeyPressed(KEY_THREE)){
-            newNode->setType(NodeType::FILTER);
+            newNode = new MergeNode(3, 3, 1, Direction::DOWN, Direction::UP, 1, 1);
         }else if (IsKeyPressed(KEY_FOUR)){                 
             newNode->setType(NodeType::RECEIVER);
         }
