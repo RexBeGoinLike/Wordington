@@ -10,4 +10,6 @@ void SourceNode::update(){
     sendData();
 }
 
-
+Node* SourceNode::clone(){                  
+    return new SourceNode(*this);
+}

@@ -31,7 +31,7 @@ private:
 
 public:
     Node(int id, NodeType type, int capacity, int speed, Direction inputDir, Direction outputDir, int inputCount, int outputCount);
-    Node(Node* other);
+    virtual Node* clone();
 
     int getId();
     NodeType getType();
@@ -60,9 +60,9 @@ public:
     void receiveData(const string& data);
     virtual void processData();
     void sendData();
-    
+
     virtual void update();
-    void onPlace(Grid *grid);
+    void onPlace(int row, int col, Grid *grid);
     
     bool isFull();
 

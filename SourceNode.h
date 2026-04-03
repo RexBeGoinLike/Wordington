@@ -11,5 +11,6 @@ public:
 
     void update() override;
 
+    Node* clone() override;
 };
 

@@ -4,4 +4,7 @@ void LogisticNode::update() {
     sendData();
 }
 
+Node* LogisticNode::clone() {
+    return new LogisticNode(*this);
+}
 

@@ -1,12 +1,14 @@
 #include "Node.h"
 #include "Grid.h"
 #include <algorithm>
+#include <iostream>
 
 Node::Node(int id, NodeType type, int capacity, int speed, Direction inputDir, Direction outputDir, int inputCount, int outputCount)
     : id(id), type(type), capacity(capacity), speed(speed), inputDirection(inputDir), outputDirection(outputDir), inputCount(inputCount), outputCount(outputCount) {}
 
-Node::Node(Node* other)
-    : id(other->id), type(other->type), capacity(other->capacity), speed(other->speed), inputDirection(other->inputDirection), outputDirection(other->outputDirection), inputCount(other->inputCount), outputCount(other->outputCount) {}
+Node* Node::clone(){
+    return new Node(*this);
+}
 
 //Getters and Setters
 int Node::getId() {
@@ -112,8 +114,12 @@ void Node::sendData() {
     }
 }
 
-void Node::onPlace(Grid *grid) {
-
+void Node::onPlace(int row, int col, Grid *grid) {
+    for(Node* inputNode : grid->getAdjacentNodesInDirection(row, col, inputDirection)) {
+        addInputConnection(inputNode);
+        inputNode->addOutputConnection(this);
+        std::cout << "Connected Node " << id << " to Node " << inputNode->getId() << std::endl;
+    }
 }
 
 void Node::update() {

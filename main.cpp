@@ -3,6 +3,7 @@
 #include "Grid.h"
 #include "Node.h"
 #include "SourceNode.h"
+#include "LogisticNode.h"
 
 using namespace std;
 
@@ -32,6 +33,8 @@ int main () {
             Vector2 mousePos = GetMousePosition();
             int row = (int)(mousePos.y / cellSize);
             int col = (int)(mousePos.x / cellSize);
+            newNode->onPlace(row, col, &grid);
+            newNode->update();
             grid.updateCell(row, col, newNode);
             nodeList.push_back(newNode);
         }
@@ -39,7 +42,7 @@ int main () {
         if (IsKeyPressed(KEY_ONE)){
             newNode = new SourceNode(1, 10, 1, Direction::DOWN, Direction::UP, 1, 1);
         }else if (IsKeyPressed(KEY_TWO)){
-            newNode->setType(NodeType::LOGISTICS);
+            newNode = new LogisticNode(2, 10, 1, Direction::DOWN, Direction::UP, 1, 1);
         }else if (IsKeyPressed(KEY_THREE)){
             newNode->setType(NodeType::FILTER);
         }else if (IsKeyPressed(KEY_FOUR)){                 
@@ -79,7 +82,6 @@ int main () {
 
         for(Node* node : nodeList) {
             node->update();
-            cout << "Node ID: " << node->getId() << " Type: " << node->getType() << " Buffer Size: " << node->getDataBuffer().size() << endl;
         }
 
         BeginDrawing();

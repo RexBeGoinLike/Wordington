@@ -1,4 +1,5 @@
 #include "Grid.h"
+#include <iostream>
 
 Texture2D sourceTexture;
 Texture2D receiverTexture;
@@ -82,9 +83,11 @@ void Grid::drawGrid(Node* tempNode) {
 
             if(grid[i][j] != nullptr) {
                 drawNode(grid[i][j], i, j, cellSize);
+
                 if(grid[i][j]->getDataBuffer().size() > 0) {
-                    DrawText(grid[i][j]->getDataBuffer()[0].c_str(), cellRect.x + 5, cellRect.y + 5, 10, RED);
+                    DrawText(grid[i][j]->getDataBuffer()[0].c_str(), j * cellSize, i * cellSize, 10, RED);
                 }
+
             }
 
             if (tempNode != nullptr) {
@@ -101,15 +104,16 @@ void Grid::drawGrid(Node* tempNode) {
 
 void Grid::updateCell(int row, int col, Node* node) {
     if (row >= 0 && row < rows && col >= 0 && col < cols) {
-        Node* newNode = new Node(*node);
+        Node* newNode = node->clone();
         grid[row][col] = newNode;
-        newNode->onPlace(this);
     }
 }
 
 vector<Node*> Grid::getAdjacentNodesInDirection(int row, int col, Direction dir) {
     vector<Node*> adjacentNodes;
 
+    std::cout << "Checking adjacent nodes for (" << row << ", " << col << ") in direction " << dir << std::endl;
+    
     switch (dir) {
         case Direction::UP:
             if (row > 0 && grid[row - 1][col]) adjacentNodes.push_back(grid[row - 1][col]);
@@ -125,5 +129,6 @@ vector<Node*> Grid::getAdjacentNodesInDirection(int row, int col, Direction dir)
             break;
     }
 
+    std::cout << "Found " << adjacentNodes.size() << " adjacent nodes." << std::endl;
     return adjacentNodes;
 }
