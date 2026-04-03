@@ -1,6 +1,7 @@
 #include "MergeNode.h"
 #include "Grid.h"
 #include <iostream>
+#include <algorithm>
 
 string MergeNode::processData() {
     string mergedData;

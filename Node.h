@@ -47,9 +47,9 @@ public:
     void setInputDirection(Direction dir);
     void setOutputDirection(Direction dir);
 
-    const vector<Node*>& getInputConnections();
-    const vector<Node*>& getOutputConnections();
-    const vector<string>& getDataBuffer();
+    vector<Node*>& getInputConnections();
+    vector<Node*>& getOutputConnections();
+    vector<string>& getDataBuffer();
     
     void addInputConnection(Node* node);
     void addOutputConnection(Node* node);

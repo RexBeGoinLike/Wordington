@@ -55,15 +55,15 @@ void Node::setOutputDirection(Direction dir) {
     outputDirection = dir;
 }
 
-const vector<Node*>& Node::getInputConnections() {
+vector<Node*>& Node::getInputConnections() {
     return inputConnections;
 }
 
-const vector<Node*>& Node::getOutputConnections() {
+vector<Node*>& Node::getOutputConnections() {
     return outputConnections;
 }
 
-const vector<string>& Node::getDataBuffer() {
+vector<string>& Node::getDataBuffer() {
     return dataBuffer;
 }
 

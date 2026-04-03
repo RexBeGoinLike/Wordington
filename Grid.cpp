@@ -93,8 +93,8 @@ void Grid::drawGrid(Node* tempNode) {
                     for(string data : grid[i][j]->getDataBuffer()) {
                         buffer += data;
                     }
-                    
-                    DrawText(buffer.c_str(), j * cellSize, i * cellSize, 40, BLACK);
+
+                    DrawText(buffer.c_str(), j * cellSize, i * cellSize, 30, BLACK);
                 }
 
             }
@@ -117,7 +117,6 @@ Node* Grid::updateCell(int row, int col, Node* node) {
         grid[row][col] = newNode;
 
         newNode->onPlace(row, col, this);
-        newNode->update();
 
         return newNode;
     }

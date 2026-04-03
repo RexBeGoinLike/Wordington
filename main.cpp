@@ -1,5 +1,6 @@
 #include <iostream>
 #include <raylib.h>
+#include <algorithm>
 #include "Grid.h"
 #include "Node.h"
 #include "SourceNode.h"
@@ -86,6 +87,11 @@ int main () {
             }
         }
 
+          
+        std::sort(nodeList.begin(), nodeList.end(), [](Node* a, Node* b) {
+            return static_cast<int>(a->getOutputDirection()) > static_cast<int>(b->getOutputDirection());
+        });
+        
         for(Node* node : nodeList) {        
             node->update();
         }
