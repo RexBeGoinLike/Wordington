@@ -7,7 +7,6 @@ string MergeNode::processData() {
     for (const string& data : getDataBuffer()) {
         mergedData += data;
     }
-    clearDataBuffer();
     return mergedData;
 }
 
