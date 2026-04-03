@@ -22,8 +22,10 @@ void MergeNode::update() {
 
 void MergeNode::onPlace(int row, int col, Grid *grid) {
     for (Node* outputNode : grid->getAdjacentNodesInDirection(row, col, getOutputDirection())) {
-        addOutputConnection(outputNode);
-        outputNode->addInputConnection(this);
+        if(outputNode->getInputDirection() == getOppositeDirection(getOutputDirection())) {
+            addOutputConnection(outputNode);
+            outputNode->addInputConnection(this);
+        }
     }
     
     for (int d = 0; d < 4; d++) {
@@ -32,8 +34,10 @@ void MergeNode::onPlace(int row, int col, Grid *grid) {
         if (dir == getOutputDirection()) continue; // skip output side
 
         for (Node* inputNode : grid->getAdjacentNodesInDirection(row, col, dir)) {
-            addInputConnection(inputNode);
-            inputNode->addOutputConnection(this);
+            if(inputNode->getOutputDirection() == getOppositeDirection(getInputDirection())){
+                addInputConnection(inputNode);
+                inputNode->addOutputConnection(this);
+            }
         }
     }
 }

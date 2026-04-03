@@ -6,6 +6,7 @@
 #include "SourceNode.h"
 #include "LogisticNode.h"
 #include "MergeNode.h"
+#include "DuplicatorNode.h"
 
 using namespace std;
 
@@ -43,11 +44,12 @@ int main () {
         }else if (IsKeyPressed(KEY_TWO)){
             newNode = new LogisticNode(2, 1, 1, Direction::DOWN, Direction::UP, 1, 1);
         }else if (IsKeyPressed(KEY_THREE)){
-            newNode = new MergeNode(3, 3, 1, Direction::DOWN, Direction::UP, 1, 1);
-        }else if (IsKeyPressed(KEY_FOUR)){                 
-            newNode->setType(NodeType::RECEIVER);
+            newNode = new MergeNode(3, 3, 1, Direction::DOWN, Direction::UP, 3, 1);
+        }else if (IsKeyPressed(KEY_FOUR)){                
+            newNode = new DuplicatorNode(4, 1, 1, Direction::DOWN, Direction::UP, 1, 3);
         }
         
+        //CHANGE THE SOURCE NODE OUTPUT BEFORE PLACING
         if(newNode->getType() == NodeType::SOURCE) {
             int key = GetCharPressed();
             char c = (char)key;
@@ -55,8 +57,9 @@ int main () {
                 ((SourceNode*)newNode)->setData(c);
             }
         }
-
-        if (IsKeyPressed(KEY_R))
+        
+        //ROTATE
+        if (IsKeyPressed(KEY_TAB))
         {
             rotation = (rotation + 1) % 4;
             switch (rotation)

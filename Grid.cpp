@@ -6,6 +6,7 @@ Texture2D receiverTexture;
 Texture2D logisticsTexture;
 Texture2D filterTexture;
 Texture2D tileTexture;
+Texture2D duplicatorTexture;
 
 void Grid::LoadGridAssets() {
     Image sourceNodeImage = LoadImage("assets/source.png");
@@ -13,18 +14,21 @@ void Grid::LoadGridAssets() {
     Image logisticsNodeImage = LoadImage("assets/logistics.png");
     Image filterNodeImage = LoadImage("assets/filter.png");
     Image tileImage = LoadImage("assets/tile.png");
+    Image duplicatorImage = LoadImage("assets/duplicator.png");
 
     ImageResize(&sourceNodeImage, 50, 50);
     ImageResize(&receiverNodeImage, 50, 50);
     ImageResize(&logisticsNodeImage, 50, 50);
     ImageResize(&filterNodeImage, 50, 50);
     ImageResize(&tileImage, 50, 50);
+    ImageResize(&duplicatorImage, 50, 50);
 
     sourceTexture = LoadTextureFromImage(sourceNodeImage);
     receiverTexture = LoadTextureFromImage(receiverNodeImage);
     logisticsTexture = LoadTextureFromImage(logisticsNodeImage);
     filterTexture = LoadTextureFromImage(filterNodeImage);
     tileTexture = LoadTextureFromImage(tileImage);
+    duplicatorTexture = LoadTextureFromImage(duplicatorImage);
 }
 
 Texture2D* getTexture(NodeType type)
@@ -35,6 +39,7 @@ Texture2D* getTexture(NodeType type)
         case NodeType::RECEIVER: return &receiverTexture;
         case NodeType::LOGISTICS: return &logisticsTexture;
         case NodeType::MERGE: return &filterTexture;
+        case NodeType::DUPLICATOR: return &duplicatorTexture;
         default: return nullptr;
     }
 }

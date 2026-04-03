@@ -109,7 +109,6 @@ IncomingData Node::processData() {
 void Node::sendData(IncomingData data) {
     for(Node* outputNode : outputConnections) {
         if(!outputNode->isFull()){
-            data.setDirection(outputDirection);
             outputNode->receiveData(data);
             clearDataBuffer();
         }
@@ -118,16 +117,18 @@ void Node::sendData(IncomingData data) {
 
 void Node::onPlace(int row, int col, Grid *grid) {
     for(Node* inputNode : grid->getAdjacentNodesInDirection(row, col, inputDirection)) {
-        addInputConnection(inputNode);
-        inputNode->addOutputConnection(this);
+        if(inputNode->getOutputDirection() == getOppositeDirection(inputDirection)) {
+            addInputConnection(inputNode);
+            inputNode->addOutputConnection(this);
+        }
     }
 
     for(Node* outputNode : grid->getAdjacentNodesInDirection(row, col, outputDirection)) {
-        addOutputConnection(outputNode);
-        outputNode->addInputConnection(this);
+        if(outputNode->getInputDirection() == getOppositeDirection(outputDirection)) {
+            addOutputConnection(outputNode);
+            outputNode->addInputConnection(this);
+        }
     }
-
- 
 }
 
 void Node::update() {

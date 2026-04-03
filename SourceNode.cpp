@@ -1,6 +1,6 @@
 #include "SourceNode.h"
 #include "Grid.h"
-#include "iostream"
+#include <iostream>
 #include <algorithm>
 #include <cctype>  
 
@@ -21,8 +21,10 @@ Node* SourceNode::clone(){
 void SourceNode::onPlace(int row, int col, Grid *grid){
 
     for(Node* outputNode : grid->getAdjacentNodesInDirection(row, col, getOutputDirection())) {
-        addOutputConnection(outputNode);
-        outputNode->addInputConnection(this);
+        if(outputNode->getInputDirection() == getOppositeDirection(getOutputDirection())) {
+            addOutputConnection(outputNode);
+            outputNode->addInputConnection(this);
+        }
     }
 }
 
