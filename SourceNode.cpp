@@ -4,10 +4,10 @@
 #include <algorithm>
 #include <cctype>  
 
-string SourceNode::processData(){
+IncomingData SourceNode::processData(){
    string data(1, this->data);
    std::transform(data.begin(), data.end(), data.begin(), ::toupper);
-   return data;
+   return IncomingData(data, getOutputDirection());
 }
 
 void SourceNode::update(){

@@ -90,8 +90,8 @@ void Grid::drawGrid(Node* tempNode) {
 
                 if(grid[i][j]->getDataBuffer().size() > 0) {
                     string buffer = "";
-                    for(string data : grid[i][j]->getDataBuffer()) {
-                        buffer += data;
+                    for(IncomingData data : grid[i][j]->getDataBuffer()) {
+                        buffer += data.getData();
                     }
 
                     DrawText(buffer.c_str(), j * cellSize, i * cellSize, 30, BLACK);

@@ -8,7 +8,7 @@ public:
         : Node(id, NodeType::MERGE, capacity, speed, inputDir, outputDir, inputCount, outputCount) {}
 
 
-    string processData() override;
+    IncomingData processData() override;
 
     void update() override;
 

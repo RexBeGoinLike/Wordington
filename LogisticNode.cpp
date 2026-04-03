@@ -2,7 +2,7 @@
 
 
 void LogisticNode::update() {
-    sendData(getDataBuffer().empty() ? "" : getDataBuffer()[0]);
+    sendData(getDataBuffer().empty() ? IncomingData() : getDataBuffer()[0]);
 }
 
 Node* LogisticNode::clone() {

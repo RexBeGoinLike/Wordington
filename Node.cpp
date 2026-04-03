@@ -63,7 +63,7 @@ vector<Node*>& Node::getOutputConnections() {
     return outputConnections;
 }
 
-vector<string>& Node::getDataBuffer() {
+vector<IncomingData>& Node::getDataBuffer() {
     return dataBuffer;
 }
 
@@ -96,20 +96,20 @@ bool Node::isFull() {
 }
 
 
-// Data Processing
-void Node::receiveData(const string& data) {
+void Node::receiveData(const IncomingData& data) {
     if (dataBuffer.size() < capacity) {
         dataBuffer.push_back(data);
     }
 }
 
-string Node::processData() {
-    return "";
+IncomingData Node::processData() {
+    return IncomingData();
 }
 
-void Node::sendData(string data) {
+void Node::sendData(IncomingData data) {
     for(Node* outputNode : outputConnections) {
         if(!outputNode->isFull()){
+            data.setDirection(outputDirection);
             outputNode->receiveData(data);
             clearDataBuffer();
         }

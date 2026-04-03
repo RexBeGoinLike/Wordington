@@ -9,7 +9,7 @@ public:
     SourceNode(int id, int capacity, int speed, Direction inputDir, Direction outputDir, int inputCount, int outputCount, char data = 'A')
         : Node(id, NodeType::SOURCE, capacity, speed, inputDir, outputDir, inputCount, outputCount), data(data) {}
     
-    string processData() override;
+    IncomingData processData() override;
 
     void update() override;
 

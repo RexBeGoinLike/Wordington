@@ -2,6 +2,7 @@
 
 #include "Direction.h"
 #include "NodeType.h" 
+#include "IncomingData.h"
 #include <vector>
 #include <string>
 
@@ -26,7 +27,7 @@ private:
     vector<Node*> outputConnections;
 
 
-    vector<string> dataBuffer;
+    vector<IncomingData> dataBuffer;
     int x, y;
 
 public:
@@ -49,7 +50,7 @@ public:
 
     vector<Node*>& getInputConnections();
     vector<Node*>& getOutputConnections();
-    vector<string>& getDataBuffer();
+    vector<IncomingData>& getDataBuffer();
     
     void addInputConnection(Node* node);
     void addOutputConnection(Node* node);
@@ -57,14 +58,12 @@ public:
     void removeOutputConnection(Node* node);
     void clearDataBuffer();
 
-    void receiveData(const string& data);
-    virtual string processData();
-    void sendData(string data = "");
+    void receiveData(const IncomingData& data);
+    virtual IncomingData processData();
+    void sendData(IncomingData data = IncomingData());
 
     virtual void update();
     virtual void onPlace(int row, int col, Grid *grid);
     
     bool isFull();
-
-
 };

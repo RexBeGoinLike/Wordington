@@ -3,12 +3,17 @@
 #include <iostream>
 #include <algorithm>
 
-string MergeNode::processData() {
+IncomingData MergeNode::processData() {
     string mergedData;
-    for (const string& data : getDataBuffer()) {
-        mergedData += data;
+    
+    std::sort(getDataBuffer().begin(), getDataBuffer().end(), [](IncomingData& a, IncomingData& b) {
+        return static_cast<int>(a.getDirection()) < static_cast<int>(b.getDirection());
+    });
+
+    for (IncomingData& data : getDataBuffer()) {
+        mergedData += data.getData();
     }
-    return mergedData;
+    return IncomingData(mergedData, getOutputDirection());
 }
 
 void MergeNode::update() {
@@ -31,12 +36,6 @@ void MergeNode::onPlace(int row, int col, Grid *grid) {
             inputNode->addOutputConnection(this);
         }
     }
-
-            
-    std::sort(getInputConnections().begin(), getInputConnections().end(), [](Node* a, Node* b) {
-        return static_cast<int>(a->getOutputDirection()) > static_cast<int>(b->getOutputDirection());
-    });
-    
 }
 
 Node* MergeNode::clone() {
