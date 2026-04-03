@@ -46,6 +46,14 @@ int main () {
         }else if (IsKeyPressed(KEY_FOUR)){                 
             newNode->setType(NodeType::RECEIVER);
         }
+        
+        if(newNode->getType() == NodeType::SOURCE) {
+            int key = GetCharPressed();
+            char c = (char)key;
+            if (key > 0 && isprint(c) && isalpha(c)) {
+                ((SourceNode*)newNode)->setData(c);
+            }
+        }
 
         if (IsKeyPressed(KEY_R))
         {
@@ -84,7 +92,7 @@ int main () {
 
 
         BeginDrawing();
-            ClearBackground(BLACK);
+            ClearBackground(WHITE);
    
             grid.drawGrid(newNode);  
             

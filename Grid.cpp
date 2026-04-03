@@ -89,7 +89,12 @@ void Grid::drawGrid(Node* tempNode) {
                 drawNode(grid[i][j], i, j, cellSize);
 
                 if(grid[i][j]->getDataBuffer().size() > 0) {
-                    DrawText(grid[i][j]->getDataBuffer()[0].c_str(), j * cellSize, i * cellSize, 10, RED);
+                    string buffer = "";
+                    for(string data : grid[i][j]->getDataBuffer()) {
+                        buffer += data;
+                    }
+                    
+                    DrawText(buffer.c_str(), j * cellSize, i * cellSize, 40, BLACK);
                 }
 
             }
