@@ -21,8 +21,8 @@ private:
 
     NodeType type;
 
-    Direction inputDirection;
-    Direction outputDirection;
+    int inputDirection;
+    int outputDirection;
     vector<Node*> inputConnections;
     vector<Node*> outputConnections;
 
@@ -31,7 +31,7 @@ private:
     int x, y;
 
 public:
-    Node(int id, NodeType type, int capacity, int speed, Direction inputDir, Direction outputDir, int inputCount, int outputCount);
+    Node(int id, NodeType type, int capacity, int speed, int inputDir, int outputDir, int inputCount, int outputCount);
     virtual Node* clone();
 
     int getId();
@@ -43,10 +43,10 @@ public:
     int getInputCount();
     int getOutputCount();
 
-    Direction getInputDirection();
-    Direction getOutputDirection();
-    void setInputDirection(Direction dir);
-    void setOutputDirection(Direction dir);
+    int getInputDirection();
+    int getOutputDirection();
+    void setInputDirection(int dir);
+    void setOutputDirection(int dir);
 
     vector<Node*>& getInputConnections();
     vector<Node*>& getOutputConnections();

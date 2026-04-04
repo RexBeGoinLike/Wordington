@@ -8,6 +8,8 @@ Texture2D filterTexture;
 Texture2D tileTexture;
 Texture2D duplicatorTexture;
 
+static Direction DIRS[4] = {UP, RIGHT, DOWN, LEFT};
+
 void Grid::LoadGridAssets() {
     Image sourceNodeImage = LoadImage("assets/source.png");
     Image receiverNodeImage = LoadImage("assets/receiver.png");
@@ -39,7 +41,7 @@ Texture2D* getTexture(NodeType type)
         case NodeType::RECEIVER: return &receiverTexture;
         case NodeType::LOGISTICS: return &logisticsTexture;
         case NodeType::MERGE: return &filterTexture;
-        case NodeType::DUPLICATOR: return &duplicatorTexture;
+        case NodeType::INTERSECTION: return &duplicatorTexture;
         default: return nullptr;
     }
 }
@@ -50,17 +52,13 @@ Grid::Grid(int r, int c, int size) : rows(r), cols(c), cellSize(size) {
 
 void drawNode(Node* node, int row, int col, int cellSize)
 {
-    if (!node) return;
-
     int rotation = 0;
+    int mask = node->getOutputDirection();
 
-    switch (node->getOutputDirection())
-    {
-        case Direction::UP: rotation = 0; break;
-        case Direction::RIGHT: rotation = 90; break;
-        case Direction::DOWN: rotation = 180; break;
-        case Direction::LEFT: rotation = 270; break;
-    }
+    if (mask & UP) rotation = 0;
+    else if (mask & RIGHT) rotation = 90;
+    else if (mask & DOWN) rotation = 180;
+    else if (mask & LEFT) rotation = 270;
 
     Texture2D* texture = getTexture(node->getType());
     if (!texture) return;
@@ -128,23 +126,24 @@ Node* Grid::updateCell(int row, int col, Node* node) {
     return nullptr;
 }
 
-vector<Node*> Grid::getAdjacentNodesInDirection(int row, int col, Direction dir) {
+vector<Node*> Grid::getAdjacentNodesInDirection(int row, int col, int dirMask) {
     vector<Node*> adjacentNodes;
 
-    switch (dir) {
-        case Direction::UP:
-            if (row > 0 && grid[row - 1][col]) adjacentNodes.push_back(grid[row - 1][col]);
-            break;
-        case Direction::DOWN:
-            if (row < rows - 1 && grid[row + 1][col]) adjacentNodes.push_back(grid[row + 1][col]);
-            break;
-        case Direction::LEFT:
-            if (col > 0 && grid[row][col - 1]) adjacentNodes.push_back(grid[row][col - 1]);
-            break;
-        case Direction::RIGHT:
-            if (col < cols - 1 && grid[row][col + 1]) adjacentNodes.push_back(grid[row][col + 1]);
-            break;
-    }
-    
+    if (dirMask & UP && row > 0 && grid[row-1][col])
+
+        adjacentNodes.push_back(grid[row-1][col]);
+
+    if (dirMask & DOWN && row < rows-1 && grid[row+1][col])
+
+        adjacentNodes.push_back(grid[row+1][col]);
+
+    if (dirMask & LEFT && col > 0 && grid[row][col-1])
+
+        adjacentNodes.push_back(grid[row][col-1]);
+
+    if (dirMask & RIGHT && col < cols-1 && grid[row][col+1])
+
+        adjacentNodes.push_back(grid[row][col+1]);
+
     return adjacentNodes;
 }

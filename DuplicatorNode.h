@@ -4,7 +4,7 @@
 class DuplicatorNode : public Node
 {
 public:
-    DuplicatorNode(int id, int capacity, int speed, Direction inputDir, Direction outputDir, int inputCount, int outputCount)
+    DuplicatorNode(int id, int capacity, int speed, int inputDir, int outputDir, int inputCount, int outputCount)
         : Node(id, NodeType::DUPLICATOR, capacity, speed, inputDir, outputDir, inputCount, outputCount) {}
 
     void update() override;

@@ -6,7 +6,7 @@ class SourceNode : public Node
 private:
     char data;
 public:
-    SourceNode(int id, int capacity, int speed, Direction inputDir, Direction outputDir, int inputCount, int outputCount, char data = 'A')
+    SourceNode(int id, int capacity, int speed, int inputDir, int outputDir, int inputCount, int outputCount, char data = 'A')
         : Node(id, NodeType::SOURCE, capacity, speed, inputDir, outputDir, inputCount, outputCount), data(data) {}
     
     IncomingData processData() override;

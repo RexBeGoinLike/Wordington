@@ -3,7 +3,7 @@
 #include <algorithm>
 #include <iostream>
 
-Node::Node(int id, NodeType type, int capacity, int speed, Direction inputDir, Direction outputDir, int inputCount, int outputCount)
+Node::Node(int id, NodeType type, int capacity, int speed, int inputDir, int outputDir, int inputCount, int outputCount)
     : id(id), type(type), capacity(capacity), speed(speed), inputDirection(inputDir), outputDirection(outputDir), inputCount(inputCount), outputCount(outputCount) {}
 
 Node* Node::clone(){
@@ -39,19 +39,19 @@ int Node::getOutputCount() {
     return outputCount;
 }
 
-Direction Node::getInputDirection() {
+int Node::getInputDirection() {
     return inputDirection;
 }
 
-Direction Node::getOutputDirection() {
+int Node::getOutputDirection() {
     return outputDirection;
 }
 
-void Node::setInputDirection(Direction dir) {
+void Node::setInputDirection(int dir) {
     inputDirection = dir;
 }
 
-void Node::setOutputDirection(Direction dir) {
+void Node::setOutputDirection(int dir) {
     outputDirection = dir;
 }
 
@@ -116,19 +116,27 @@ void Node::sendData(IncomingData data) {
 }
 
 void Node::onPlace(int row, int col, Grid *grid) {
-    for(Node* inputNode : grid->getAdjacentNodesInDirection(row, col, inputDirection)) {
-        if(inputNode->getOutputDirection() == getOppositeDirection(inputDirection)) {
+    for (Node* outputNode : grid->getAdjacentNodesInDirection(row, col, getOutputDirection())) {
+        int expectedInputMask = getOppositeDirection(getOutputDirection());
+
+        if (outputNode->getInputDirection() & expectedInputMask) {
+            addOutputConnection(outputNode);
+            outputNode->addInputConnection(this);
+        }
+    }
+
+
+    for (Node* inputNode : grid->getAdjacentNodesInDirection(row, col, getInputDirection())) {
+        int expectedOutputMask = getOppositeDirection(getInputDirection());
+
+        if (inputNode->getOutputDirection() & expectedOutputMask) {
             addInputConnection(inputNode);
             inputNode->addOutputConnection(this);
         }
     }
 
-    for(Node* outputNode : grid->getAdjacentNodesInDirection(row, col, outputDirection)) {
-        if(outputNode->getInputDirection() == getOppositeDirection(outputDirection)) {
-            addOutputConnection(outputNode);
-            outputNode->addInputConnection(this);
-        }
-    }
+    cout << getInputConnections().size();
+    cout << getOutputConnections().size() << endl;
 }
 
 void Node::update() {

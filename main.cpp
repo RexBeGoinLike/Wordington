@@ -40,13 +40,13 @@ int main () {
         }
 
         if (IsKeyPressed(KEY_ONE)){
-            newNode = new SourceNode(1, 1, 1, Direction::DOWN, Direction::UP, 1, 1);
+            newNode = new SourceNode(1, 1, 1, DOWN, UP, 1, 1);
         }else if (IsKeyPressed(KEY_TWO)){
-            newNode = new LogisticNode(2, 1, 1, Direction::DOWN, Direction::UP, 1, 1);
+            newNode = new LogisticNode(2, 1, 1, DOWN, UP, 1, 1);
         }else if (IsKeyPressed(KEY_THREE)){
-            newNode = new MergeNode(3, 3, 1, Direction::DOWN, Direction::UP, 3, 1);
+            newNode = new MergeNode(3, 3, 1, (DOWN | LEFT | RIGHT), UP, 3, 1);
         }else if (IsKeyPressed(KEY_FOUR)){                
-            newNode = new DuplicatorNode(4, 1, 1, Direction::DOWN, Direction::UP, 1, 3);
+  
         }
         
         //CHANGE THE SOURCE NODE OUTPUT BEFORE PLACING
@@ -58,42 +58,19 @@ int main () {
             }
         }
         
-        //ROTATE
+       
         if (IsKeyPressed(KEY_TAB))
         {
-            rotation = (rotation + 1) % 4;
-            switch (rotation)
-            {
-            case 0:
-                newNode->setOutputDirection(Direction::UP);
-                newNode->setInputDirection(Direction::DOWN);
-                break;
-            
-            case 1:
-                
-                newNode->setOutputDirection(Direction::RIGHT);
-                newNode->setInputDirection(Direction::LEFT);
-                break;  
+            int newOutput = rotateClockwise(newNode->getOutputDirection());
+            int newInput  = rotateClockwise(newNode->getInputDirection());
 
-            case 2:
-                newNode->setOutputDirection(Direction::DOWN);
-                newNode->setInputDirection(Direction::UP);
-                break;      
-
-            case 3:
-                newNode->setOutputDirection(Direction::LEFT);
-                newNode->setInputDirection(Direction::RIGHT);
-                break;
-
-            default:
-                break;
-            }
+            newNode->setOutputDirection(newOutput);
+            newNode->setInputDirection(newInput);
         }
 
         for(Node* node : nodeList) {        
             node->update();
         }
-
 
         BeginDrawing();
             ClearBackground(WHITE);

@@ -5,16 +5,16 @@ using namespace std;
 class IncomingData {
     private:
         string data;
-        Direction direction;
+        int direction;
     public:
-        IncomingData(string data, Direction direction) : data(data), direction(direction) {}
+        IncomingData(string data, int direction) : data(data), direction(direction) {}
 
         IncomingData() : data(""), direction(Direction::UP) {}
         string getData() {
             return data;
         }  
 
-        Direction getDirection() {
+        int getDirection() {
             return direction;
         }
 

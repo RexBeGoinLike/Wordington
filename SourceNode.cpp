@@ -20,8 +20,10 @@ Node* SourceNode::clone(){
 
 void SourceNode::onPlace(int row, int col, Grid *grid){
 
-    for(Node* outputNode : grid->getAdjacentNodesInDirection(row, col, getOutputDirection())) {
-        if(outputNode->getInputDirection() == getOppositeDirection(getOutputDirection())) {
+    for (Node* outputNode : grid->getAdjacentNodesInDirection(row, col, getOutputDirection())) {
+        int expectedInputMask = getOppositeDirection(getOutputDirection());
+
+        if (outputNode->getInputDirection() & expectedInputMask) {
             addOutputConnection(outputNode);
             outputNode->addInputConnection(this);
         }
