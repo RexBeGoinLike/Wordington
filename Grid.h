@@ -14,6 +14,8 @@ class Grid
         static void LoadGridAssets();
         Node* removeNode(int row, int col);
         vector<Node*> getAdjacentNodesInDirection(int row, int col, int dirMask);
+        void drawNode(Node* node, int row, int col, int cellSize, int offset, int temp = true);
+        void drawPalette(int offset, int selected);
         
     private:
         int rows;

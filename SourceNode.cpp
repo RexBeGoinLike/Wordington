@@ -28,9 +28,12 @@ void SourceNode::onPlace(Grid *grid){
             outputNode->addInputConnection(this);
         }
     }
+    
 }
 
 void SourceNode::setData(char newData) {
     data = newData;
+    getDataBuffer().clear();
+    getDataBuffer().push_back(processData());
 }
 

@@ -7,7 +7,9 @@ private:
     char data;
 public:
     SourceNode(int id, int capacity, int speed, int inputDir, int outputDir, int inputCount, int outputCount, int row, int col, char data = 'A')
-        : Node(id, NodeType::SOURCE, capacity, speed, inputDir, outputDir, inputCount, outputCount, row, col), data(data) {}
+        : Node(id, NodeType::SOURCE, capacity, speed, inputDir, outputDir, inputCount, outputCount, row, col), data(data) {
+             getDataBuffer().push_back(processData());
+        }
     
     IncomingData processData() override;
 

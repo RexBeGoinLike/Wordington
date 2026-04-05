@@ -15,12 +15,14 @@ using namespace std;
 
 int main () {
 
-    const int SCREEN_WIDTH = 800;
-    const int SCREEN_HEIGHT = 800;
-    const int gridRows = 8;
-    const int gridCols = 8;
+    const int SCREEN_WIDTH = 950;
+    const int SCREEN_HEIGHT = 950;
+    const int gridRows = 10;
+    const int gridCols = 10;
     const int cellSize = 67;
     const int offset = (SCREEN_WIDTH - (gridCols * cellSize)) / 2;
+
+    int selected = 1;
 
     Grid grid(gridRows, gridCols, cellSize, offset);
 
@@ -36,6 +38,7 @@ int main () {
     srand((unsigned)time(nullptr));
 
     SentenceReader reader("sentences.txt");
+    char selectedChar = 'A';
 
     string generatedText = reader.getRandomSentence();
 
@@ -73,16 +76,22 @@ int main () {
 
         if (IsKeyPressed(KEY_ONE)){
             newNode = new SourceNode(1, 1, 1, DOWN, UP, 0, 1, 1, 1);
+            selected = 1;
         }else if (IsKeyPressed(KEY_TWO)){
             newNode = new LogisticNode(2, 1, 1, DOWN, UP, 1, 1, 1, 1);
+            selected = 2;
         }else if (IsKeyPressed(KEY_THREE)){
             newNode = new MergeNode(3, 3, 1, (DOWN | LEFT | RIGHT), UP, 3, 1, 1, 1);
+            selected = 3;
         }else if (IsKeyPressed(KEY_FOUR)){                
             newNode = new DuplicatorNode(4, 1, 1, DOWN, (UP | LEFT | RIGHT), 1, 3, 1, 1, &grid);
+            selected = 4;
         }else if (IsKeyPressed(KEY_FIVE)){
             newNode = new IntersectionNode(5, 2, 1, (LEFT | DOWN), (UP | RIGHT), 2, 2, 1, 1, &grid);
+            selected = 5;
         }else if (IsKeyPressed(KEY_SIX)){
             newNode = new OutputNode (6, 1, 1, DOWN, UP, 1, 0, 1, 1, &generatedText, &reader);
+            selected = 6;
         }
         
         
@@ -90,6 +99,7 @@ int main () {
         if(newNode->getType() == NodeType::SOURCE) {
             int key = GetCharPressed();
             char c = (char)key;
+            selectedChar = c;
             if (key > 0 && isprint(c) && (isalpha(c) || c == ' ')) {
                 ((SourceNode*)newNode)->setData(c);
             }
@@ -111,12 +121,22 @@ int main () {
 
         BeginDrawing();
             ClearBackground(WHITE);
-            string label = "BUILD THE SENTENCE: ";
             grid.drawGrid(newNode); 
-            int labelsize = 25;
+            grid.drawPalette(offset, selected);
+
+            //Top Label
+            string label = "Build the sentence:";
+            int labelsize = 20;
             DrawText(label.c_str(), (SCREEN_WIDTH - ((int) MeasureText(label.c_str(), labelsize)))/2, (offset - labelsize)/2 - (labelsize*1.5), labelsize, BLACK);
             int fontsize = 30; 
             DrawText((generatedText).c_str(), (SCREEN_WIDTH - ((int) MeasureText(generatedText.c_str(), fontsize)))/2, (offset - fontsize)/2, fontsize, BLACK);
+            label = "Press DEL to remove a component";
+            DrawText(label.c_str(), (SCREEN_WIDTH - ((int) MeasureText(label.c_str(), labelsize)))/2, (offset - labelsize)/2 + (labelsize*1.7), labelsize, BLACK);
+            label = "Press TAB to rotate a component";
+            DrawText(label.c_str(), (SCREEN_WIDTH - ((int) MeasureText(label.c_str(), labelsize)))/2, (offset - labelsize)/2 + (labelsize*2.9), labelsize, BLACK);
+
+
+            
             
         EndDrawing();
     }

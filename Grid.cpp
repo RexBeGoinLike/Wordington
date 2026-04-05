@@ -1,6 +1,5 @@
 #include "Grid.h"
 #include <iostream>
-
 Texture2D sourceTexture;
 Texture2D logisticsTexture;
 Texture2D cornerLogTexture;
@@ -11,6 +10,8 @@ Texture2D intersectionTexture;
 Texture2D receiverTexture;
 
 void Grid::LoadGridAssets() {
+
+    int cellsize = 67;
     Image sourceNodeImage = LoadImage("assets/source.png");
     Image logisticsNodeImage = LoadImage("assets/logistics.png");
     Image cornerLogImage = LoadImage("assets/logisticscorner.png");
@@ -20,14 +21,14 @@ void Grid::LoadGridAssets() {
     Image intersectionImage = LoadImage("assets/intersection.png");
     Image receiverImage = LoadImage("assets/receiver.png");
 
-    ImageResize(&sourceNodeImage, 50, 50);
-    ImageResize(&logisticsNodeImage, 50, 50);
-    ImageResize(&cornerLogImage, 50, 50);
-    ImageResize(&filterNodeImage, 50, 50);
-    ImageResize(&tileImage, 50, 50);
-    ImageResize(&duplicatorImage, 50, 50);
-    ImageResize(&intersectionImage, 50, 50);
-    ImageResize(&receiverImage, 50, 50);
+    ImageResize(&sourceNodeImage, cellsize, cellsize);
+    ImageResize(&logisticsNodeImage, cellsize, cellsize);
+    ImageResize(&cornerLogImage, cellsize, cellsize);
+    ImageResize(&filterNodeImage, cellsize, cellsize);
+    ImageResize(&tileImage, cellsize, cellsize);
+    ImageResize(&duplicatorImage, cellsize, cellsize);
+    ImageResize(&intersectionImage, cellsize, cellsize);
+    ImageResize(&receiverImage, cellsize, cellsize);
 
     sourceTexture = LoadTextureFromImage(sourceNodeImage);
     logisticsTexture = LoadTextureFromImage(logisticsNodeImage);
@@ -58,7 +59,7 @@ Grid::Grid(int r, int c, int size, int offset) : rows(r), cols(c), cellSize(size
     grid.resize(rows, vector<Node*>(cols));
 }
 
-void drawNode(Node* node, int row, int col, int cellSize, int offset)
+void Grid::drawNode(Node* node, int row, int col, int cellSize, int offset, int temp)
 {
     int rotation = 0;
     int mask = node->getOutputDirection();
@@ -82,8 +83,19 @@ void drawNode(Node* node, int row, int col, int cellSize, int offset)
     };
 
     Vector2 origin = { cellSize/2.0f, cellSize/2.0f };
-
-    DrawTexturePro(*texture, sourceRec, destRec, origin, rotation, WHITE);
+    
+    if(temp){
+        if(!grid[row][col]){
+            Color color = { 0, 255, 0, 128 };
+            DrawTexturePro(*texture, sourceRec, destRec, origin, rotation, color);
+        }else{
+            Color color = { 255, 0, 0, 128 };
+            DrawTexturePro(*texture, sourceRec, destRec, origin, rotation, color);  
+        }          
+    }else{
+            DrawTexturePro(*texture, sourceRec, destRec, origin, rotation, WHITE);       
+    }
+    
 }
 
 void Grid::drawGrid(Node* tempNode) {
@@ -108,7 +120,7 @@ void Grid::drawGrid(Node* tempNode) {
             DrawRectangleLinesEx(cellRect, 1, LIGHTGRAY);
 
             if (grid[i][j] != nullptr) {
-                drawNode(grid[i][j], i, j, cellSize, offset); 
+                drawNode(grid[i][j], i, j, cellSize, offset, false); 
         
                 if (grid[i][j]->getDataBuffer().size() > 0) {
                     std::string buffer = "";
@@ -119,14 +131,25 @@ void Grid::drawGrid(Node* tempNode) {
                     DrawText(buffer.c_str(), 
                              (int)(j * cellSize + offset), 
                              (int)(i * cellSize + offset), 
-                             15, BLACK);
+                             20, BLACK);
                 }
             }
 
 
             if (tempNode != nullptr && i == hoverRow && j == hoverCol) {
                 drawNode(tempNode, hoverRow, hoverCol, cellSize, offset);
-            }
+
+                std::string buffer = "";
+                for (IncomingData& data : tempNode->getDataBuffer()) {
+                    buffer += data.getData();
+                }
+
+                buffer = (buffer == " ") ? "' '" : buffer;
+                DrawText(buffer.c_str(), 
+                            (int)(j * cellSize + offset), 
+                            (int)(i * cellSize + offset), 
+                            20, BLACK);
+        }
         }
     }
 }
@@ -195,4 +218,36 @@ Node* Grid::removeNode(int row, int col){
     grid[row][col] = nullptr;
 
     return node; 
+}
+
+void Grid::drawPalette(int offset, int selected)
+{
+    const int startX = (offset - cellSize)/2;
+    int startY = offset;
+    const int cellSize = 67;
+    const int padding = 20;
+
+    for (int i = 0; i < COUNT; i++)
+    {
+        NodeType type = static_cast<NodeType>(i);
+
+        if (type == CORNERLOG) continue;
+
+        Texture2D* tex = getTexture(type);
+        if (!tex) continue;
+
+        int opacity = (i + 1 == selected) ? 64 : 255;
+        Color color = {255, 255, 255, opacity};
+        Rectangle box = { (float)startX, (float)startY, (float)cellSize, (float)cellSize };
+        DrawRectangleLinesEx(box, 2, color);
+
+        Rectangle srcRec = { 0, 0, (float)tex->width, (float)tex->height };
+        Rectangle destRec = { startX + cellSize/2.0f, startY + cellSize/2.0f, (float)cellSize, (float)cellSize };
+        Vector2 origin = { (float)cellSize/2.0f, (float)cellSize/2.0f };
+        DrawTexturePro(*tex, srcRec, destRec, origin, 0, color);
+
+        DrawText(TextFormat("%d", i+1), startX + 5, startY + 5, 23, BLACK);
+
+        startY += cellSize + padding;
+    }
 }

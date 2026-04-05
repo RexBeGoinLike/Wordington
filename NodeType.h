@@ -1,9 +1,10 @@
 enum NodeType { 
     SOURCE, 
     LOGISTICS,
-    CORNERLOG,
     MERGE, 
+    DUPLICATOR,
     INTERSECTION,
     RECEIVER,
-    DUPLICATOR
+    CORNERLOG,
+    COUNT
 };
