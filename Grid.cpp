@@ -165,7 +165,7 @@ void Grid::drawGrid(Node* tempNode) {
                 DrawText(buffer.c_str(), 
                             (int)(j * cellSize + offset), 
                             (int)(i * cellSize + offset), 
-                            20, BLACK);
+                            15, BLACK);
         }
         }
     }
@@ -248,7 +248,7 @@ void Grid::drawPalette(int offset, int selected)
     {
         NodeType type = static_cast<NodeType>(i);
 
-        if (type == CORNERLOG) continue;
+        if (type == CORNERLOG || type == CORNERLOGL) continue;
 
         Texture2D* tex = getTexture(type);
         if (!tex) continue;

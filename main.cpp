@@ -15,10 +15,10 @@ using namespace std;
 
 int main () {
 
-    const int SCREEN_WIDTH = 1000;
-    const int SCREEN_HEIGHT = 1000;
-    const int gridRows = 10;
-    const int gridCols = 10;
+    const int SCREEN_WIDTH = 900;
+    const int SCREEN_HEIGHT = 900;
+    const int gridRows = 8;
+    const int gridCols = 8;
     const int cellSize = 67;
     const int offset = (SCREEN_WIDTH - (gridCols * cellSize)) / 2;
     vector<string> tooltips = {
@@ -143,7 +143,7 @@ int main () {
             label = "Press TAB to rotate a component";
             DrawText(label.c_str(), (SCREEN_WIDTH - ((int) MeasureText(label.c_str(), labelsize)))/2, (offset - labelsize)/2 + (labelsize*2.9), labelsize, BLACK);
 
-            labelsize = 20;
+            labelsize = 18;
             DrawText(tooltips[selected - 1].c_str(), (SCREEN_WIDTH - ((int) MeasureText(tooltips[selected - 1].c_str(), labelsize)))/2, (SCREEN_HEIGHT - offset) + labelsize*2, labelsize, BLACK);
 
             
