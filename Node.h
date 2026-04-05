@@ -19,6 +19,9 @@ private:
     int capacity;
     int speed;
 
+    int row;
+    int col;
+
     NodeType type;
 
     int inputDirection;
@@ -31,7 +34,7 @@ private:
     int x, y;
 
 public:
-    Node(int id, NodeType type, int capacity, int speed, int inputDir, int outputDir, int inputCount, int outputCount);
+    Node(int id, NodeType type, int capacity, int speed, int inputDir, int outputDir, int inputCount, int outputCount, int row, int col);
     virtual Node* clone();
 
     int getId();
@@ -58,12 +61,18 @@ public:
     void removeOutputConnection(Node* node);
     void clearDataBuffer();
 
-    void receiveData(const IncomingData& data);
+    void receiveData(IncomingData& data);
     virtual IncomingData processData();
-    void sendData(IncomingData data = IncomingData());
+    virtual void sendData(IncomingData data = IncomingData());
 
     virtual void update();
-    virtual void onPlace(int row, int col, Grid *grid);
+    virtual void onPlace(Grid *grid);
+
+    int getCol();
+    int getRow();
+
+    void setRow(int row);
+    void setCol(int col);
     
     bool isFull();
 };

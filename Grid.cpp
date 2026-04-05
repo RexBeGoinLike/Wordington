@@ -4,9 +4,11 @@
 Texture2D sourceTexture;
 Texture2D receiverTexture;
 Texture2D logisticsTexture;
+Texture2D cornerLogTexture;
 Texture2D filterTexture;
 Texture2D tileTexture;
 Texture2D duplicatorTexture;
+Texture2D intersectionTexture;
 
 static Direction DIRS[4] = {UP, RIGHT, DOWN, LEFT};
 
@@ -14,23 +16,29 @@ void Grid::LoadGridAssets() {
     Image sourceNodeImage = LoadImage("assets/source.png");
     Image receiverNodeImage = LoadImage("assets/receiver.png");
     Image logisticsNodeImage = LoadImage("assets/logistics.png");
+    Image cornerLogImage = LoadImage("assets/logisticscorner.png");
     Image filterNodeImage = LoadImage("assets/filter.png");
     Image tileImage = LoadImage("assets/tile.png");
     Image duplicatorImage = LoadImage("assets/duplicator.png");
+    Image intersectionImage = LoadImage("assets/intersection.png");
 
     ImageResize(&sourceNodeImage, 50, 50);
     ImageResize(&receiverNodeImage, 50, 50);
     ImageResize(&logisticsNodeImage, 50, 50);
+    ImageResize(&cornerLogImage, 50, 50);
     ImageResize(&filterNodeImage, 50, 50);
     ImageResize(&tileImage, 50, 50);
     ImageResize(&duplicatorImage, 50, 50);
+    ImageResize(&intersectionImage, 50, 50);
 
     sourceTexture = LoadTextureFromImage(sourceNodeImage);
     receiverTexture = LoadTextureFromImage(receiverNodeImage);
     logisticsTexture = LoadTextureFromImage(logisticsNodeImage);
+    cornerLogTexture = LoadTextureFromImage(cornerLogImage);
     filterTexture = LoadTextureFromImage(filterNodeImage);
     tileTexture = LoadTextureFromImage(tileImage);
     duplicatorTexture = LoadTextureFromImage(duplicatorImage);
+    intersectionTexture = LoadTextureFromImage(intersectionImage);
 }
 
 Texture2D* getTexture(NodeType type)
@@ -40,8 +48,10 @@ Texture2D* getTexture(NodeType type)
         case NodeType::SOURCE: return &sourceTexture;
         case NodeType::RECEIVER: return &receiverTexture;
         case NodeType::LOGISTICS: return &logisticsTexture;
+        case NodeType::CORNERLOG: return &cornerLogTexture;
         case NodeType::MERGE: return &filterTexture;
-        case NodeType::INTERSECTION: return &duplicatorTexture;
+        case NodeType::DUPLICATOR: return &duplicatorTexture;
+        case NodeType::INTERSECTION: return &intersectionTexture;
         default: return nullptr;
     }
 }
@@ -118,9 +128,15 @@ Node* Grid::updateCell(int row, int col, Node* node) {
     if (row >= 0 && row < rows && col >= 0 && col < cols) {
         Node* newNode = node->clone();
         grid[row][col] = newNode;
-
-        newNode->onPlace(row, col, this);
-
+        newNode->setRow(row);
+        newNode->setCol(col);
+        newNode->onPlace(this);
+        
+        cout << "Placed at: " << row << " " << col << endl;
+        cout << "Node Placed at: " << newNode->getRow() << " " << newNode->getCol() << endl;
+        
+        cout << "Node Type: " << newNode->getType() << endl;
+        cout << newNode->getInputConnections().size() << " " << newNode->getOutputConnections().size() << endl;
         return newNode;
     }
     return nullptr;

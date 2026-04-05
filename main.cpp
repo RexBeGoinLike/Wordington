@@ -7,6 +7,7 @@
 #include "LogisticNode.h"
 #include "MergeNode.h"
 #include "DuplicatorNode.h"
+#include "IntersectionNode.h"
 
 using namespace std;
 
@@ -18,7 +19,6 @@ int main () {
     const int gridCols = 25;
     const int cellSize = 64;
 
-    int rotation = 0;
     Grid grid(gridRows, gridCols, cellSize);
 
     InitWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "Wordington");
@@ -28,7 +28,7 @@ int main () {
     
     vector<Node*> nodeList;
     
-    Node* newNode = new SourceNode(1, 10, 1, Direction::DOWN, Direction::UP, 1, 1);
+    Node* newNode = new SourceNode(1, 10, 1, Direction::DOWN, Direction::UP, 1, 1, 1, 1);
 
     while (WindowShouldClose() == false){
 
@@ -40,13 +40,15 @@ int main () {
         }
 
         if (IsKeyPressed(KEY_ONE)){
-            newNode = new SourceNode(1, 1, 1, DOWN, UP, 1, 1);
+            newNode = new SourceNode(1, 1, 1, DOWN, UP, 1, 1, 1, 1);
         }else if (IsKeyPressed(KEY_TWO)){
-            newNode = new LogisticNode(2, 1, 1, DOWN, UP, 1, 1);
+            newNode = new LogisticNode(2, 1, 1, DOWN, UP, 1, 1, 1, 1);
         }else if (IsKeyPressed(KEY_THREE)){
-            newNode = new MergeNode(3, 3, 1, (DOWN | LEFT | RIGHT), UP, 3, 1);
+            newNode = new MergeNode(3, 3, 1, (DOWN | LEFT | RIGHT), UP, 3, 1, 1, 1);
         }else if (IsKeyPressed(KEY_FOUR)){                
-  
+            newNode = new DuplicatorNode(4, 1, 1, DOWN, (UP | LEFT | RIGHT), 1, 3, 1, 1, &grid);
+        }else if (IsKeyPressed(KEY_FIVE)){
+            newNode = new IntersectionNode(5, 2, 1, (LEFT | DOWN), (UP | RIGHT), 2, 2, 1, 1, &grid);
         }
         
         //CHANGE THE SOURCE NODE OUTPUT BEFORE PLACING

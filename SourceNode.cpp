@@ -18,9 +18,9 @@ Node* SourceNode::clone(){
     return new SourceNode(*this);
 }
 
-void SourceNode::onPlace(int row, int col, Grid *grid){
+void SourceNode::onPlace(Grid *grid){
 
-    for (Node* outputNode : grid->getAdjacentNodesInDirection(row, col, getOutputDirection())) {
+    for (Node* outputNode : grid->getAdjacentNodesInDirection(getRow(), getCol(), getOutputDirection())) {
         int expectedInputMask = getOppositeDirection(getOutputDirection());
 
         if (outputNode->getInputDirection() & expectedInputMask) {

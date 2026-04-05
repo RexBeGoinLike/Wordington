@@ -2,26 +2,37 @@
 #include "Grid.h"
 #include <iostream>
 
-void DuplicatorNode::onPlace(int row, int col, Grid *grid){
-    for (Node* inputNode : grid->getAdjacentNodesInDirection(row, col, getInputDirection())) {
-        if(inputNode->getInputDirection() == getOppositeDirection(getInputDirection())) {
-            addInputConnection(inputNode);
-            inputNode->addOutputConnection(this);
-        }
-    }
-    
-    for (int d = 0; d < 4; d++) {
-        Direction dir = static_cast<Direction>(d);
 
-        if (dir == getInputDirection()) continue; // skip output side
-
-        for (Node* inputNode : grid->getAdjacentNodesInDirection(row, col, dir)) {
-            if(inputNode->getOutputDirection() == getOppositeDirection(getInputDirection())){
-                addInputConnection(inputNode);
-                inputNode->addOutputConnection(this);
+void DuplicatorNode::sendData(IncomingData data){
+    for(Node* outputNode : getOutputConnections()) {
+        Direction dir = UP;
+            std::vector<Node*> upNodes = grid->getAdjacentNodesInDirection(getRow(), getCol(), UP);
+            if (!upNodes.empty() && outputNode == upNodes[0]) {
+                dir = UP;
             }
+
+            std::vector<Node*> downNodes = grid->getAdjacentNodesInDirection(getRow(), getCol(), DOWN);
+            if (!downNodes.empty() && outputNode == downNodes[0]) {
+                dir = DOWN;
+            }
+
+            std::vector<Node*> leftNodes = grid->getAdjacentNodesInDirection(getRow(), getCol(), LEFT);
+            if (!leftNodes.empty() && outputNode == leftNodes[0]) {
+                dir = LEFT;
+            }
+
+            std::vector<Node*> rightNodes = grid->getAdjacentNodesInDirection(getRow(), getCol(), RIGHT);
+            if (!rightNodes.empty() && outputNode == rightNodes[0]) {
+                dir = RIGHT;
+            }
+        
+        data.setDirection(dir);     
+        
+        if(!outputNode->isFull()){
+            outputNode->receiveData(data);
+            clearDataBuffer();
         }
-    }
+    }   
 }
 
 void DuplicatorNode::update(){

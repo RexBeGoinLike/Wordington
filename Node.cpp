@@ -3,8 +3,8 @@
 #include <algorithm>
 #include <iostream>
 
-Node::Node(int id, NodeType type, int capacity, int speed, int inputDir, int outputDir, int inputCount, int outputCount)
-    : id(id), type(type), capacity(capacity), speed(speed), inputDirection(inputDir), outputDirection(outputDir), inputCount(inputCount), outputCount(outputCount) {}
+Node::Node(int id, NodeType type, int capacity, int speed, int inputDir, int outputDir, int inputCount, int outputCount, int row, int col)
+    : id(id), type(type), capacity(capacity), speed(speed), inputDirection(inputDir), outputDirection(outputDir), inputCount(inputCount), outputCount(outputCount), row(row), col(col) {}
 
 Node* Node::clone(){
     return new Node(*this);
@@ -79,6 +79,22 @@ void Node::addOutputConnection(Node* node) {
     }
 }
 
+int Node::getRow() {
+    return row;
+}
+
+int Node::getCol() {
+    return col;
+}
+
+void Node::setRow(int row) {
+    this->row = row;
+}
+
+void Node::setCol(int col) {
+    this->col = col;
+}
+
 void Node::removeInputConnection(Node* node) {
     inputConnections.erase(remove(inputConnections.begin(), inputConnections.end(), node), inputConnections.end());
 }
@@ -96,7 +112,15 @@ bool Node::isFull() {
 }
 
 
-void Node::receiveData(const IncomingData& data) {
+void Node::receiveData(IncomingData& data) {
+
+    for (IncomingData& existing : dataBuffer) {
+        if (existing.getDirection() == data.getDirection()) {
+            return; 
+        }
+    }
+
+    
     if (dataBuffer.size() < capacity) {
         dataBuffer.push_back(data);
     }
@@ -115,7 +139,7 @@ void Node::sendData(IncomingData data) {
     }   
 }
 
-void Node::onPlace(int row, int col, Grid *grid) {
+void Node::onPlace(Grid *grid) {
     for (Node* outputNode : grid->getAdjacentNodesInDirection(row, col, getOutputDirection())) {
         int expectedInputMask = getOppositeDirection(getOutputDirection());
 
@@ -134,9 +158,6 @@ void Node::onPlace(int row, int col, Grid *grid) {
             inputNode->addOutputConnection(this);
         }
     }
-
-    cout << getInputConnections().size();
-    cout << getOutputConnections().size() << endl;
 }
 
 void Node::update() {

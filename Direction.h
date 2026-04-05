@@ -26,3 +26,12 @@ inline int rotateClockwise(int dirMask) {
     if (dirMask & LEFT)  result |= UP;
     return result;
 }
+
+inline int rotateCounterClockwise(int dirMask) {
+    int result = 0;
+    if (dirMask & UP)    result |= LEFT;
+    if (dirMask & LEFT)  result |= DOWN;
+    if (dirMask & DOWN)  result |= RIGHT;
+    if (dirMask & RIGHT) result |= UP;
+    return result;
+}
