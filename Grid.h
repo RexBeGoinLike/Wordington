@@ -8,7 +8,7 @@ using namespace std;
 class Grid
 {
     public:
-        Grid(int r, int c, int size);    
+        Grid(int r, int c, int size, int offset);    
         void drawGrid(Node* tempNode);
         Node* updateCell(int row, int col, Node* node);
         static void LoadGridAssets();
@@ -18,6 +18,7 @@ class Grid
         int rows;
         int cols;
         int cellSize;
+        int offset;
         vector<vector<Node*>> grid;
 
 };

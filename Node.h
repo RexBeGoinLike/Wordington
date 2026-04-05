@@ -61,7 +61,7 @@ public:
     void removeOutputConnection(Node* node);
     void clearDataBuffer();
 
-    void receiveData(IncomingData& data);
+    virtual void receiveData(IncomingData& data);
     virtual IncomingData processData();
     virtual void sendData(IncomingData data = IncomingData());
 

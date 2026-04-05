@@ -2,43 +2,41 @@
 #include <iostream>
 
 Texture2D sourceTexture;
-Texture2D receiverTexture;
 Texture2D logisticsTexture;
 Texture2D cornerLogTexture;
 Texture2D filterTexture;
 Texture2D tileTexture;
 Texture2D duplicatorTexture;
 Texture2D intersectionTexture;
-
-static Direction DIRS[4] = {UP, RIGHT, DOWN, LEFT};
+Texture2D receiverTexture;
 
 void Grid::LoadGridAssets() {
     Image sourceNodeImage = LoadImage("assets/source.png");
-    Image receiverNodeImage = LoadImage("assets/receiver.png");
     Image logisticsNodeImage = LoadImage("assets/logistics.png");
     Image cornerLogImage = LoadImage("assets/logisticscorner.png");
     Image filterNodeImage = LoadImage("assets/filter.png");
     Image tileImage = LoadImage("assets/tile.png");
     Image duplicatorImage = LoadImage("assets/duplicator.png");
     Image intersectionImage = LoadImage("assets/intersection.png");
+    Image receiverImage = LoadImage("assets/receiver.png");
 
     ImageResize(&sourceNodeImage, 50, 50);
-    ImageResize(&receiverNodeImage, 50, 50);
     ImageResize(&logisticsNodeImage, 50, 50);
     ImageResize(&cornerLogImage, 50, 50);
     ImageResize(&filterNodeImage, 50, 50);
     ImageResize(&tileImage, 50, 50);
     ImageResize(&duplicatorImage, 50, 50);
     ImageResize(&intersectionImage, 50, 50);
+    ImageResize(&receiverImage, 50, 50);
 
     sourceTexture = LoadTextureFromImage(sourceNodeImage);
-    receiverTexture = LoadTextureFromImage(receiverNodeImage);
     logisticsTexture = LoadTextureFromImage(logisticsNodeImage);
     cornerLogTexture = LoadTextureFromImage(cornerLogImage);
     filterTexture = LoadTextureFromImage(filterNodeImage);
     tileTexture = LoadTextureFromImage(tileImage);
     duplicatorTexture = LoadTextureFromImage(duplicatorImage);
     intersectionTexture = LoadTextureFromImage(intersectionImage);
+    receiverTexture = LoadTextureFromImage(receiverImage);
 }
 
 Texture2D* getTexture(NodeType type)
@@ -56,11 +54,11 @@ Texture2D* getTexture(NodeType type)
     }
 }
 
-Grid::Grid(int r, int c, int size) : rows(r), cols(c), cellSize(size) {
+Grid::Grid(int r, int c, int size, int offset) : rows(r), cols(c), cellSize(size), offset(offset) {
     grid.resize(rows, vector<Node*>(cols));
 }
 
-void drawNode(Node* node, int row, int col, int cellSize)
+void drawNode(Node* node, int row, int col, int cellSize, int offset)
 {
     int rotation = 0;
     int mask = node->getOutputDirection();
@@ -77,8 +75,8 @@ void drawNode(Node* node, int row, int col, int cellSize)
 
     Rectangle destRec =
     {
-        (float)col * cellSize + cellSize/2.0f,
-        (float)row * cellSize + cellSize/2.0f,
+        (float)col * cellSize + cellSize/2.0f + offset, 
+        (float)row * cellSize + cellSize/2.0f + offset,
         (float)cellSize,
         (float)cellSize
     };
@@ -90,34 +88,44 @@ void drawNode(Node* node, int row, int col, int cellSize)
 
 void Grid::drawGrid(Node* tempNode) {
     Vector2 mousePos = GetMousePosition();
-    int hoverRow = (int)(mousePos.y / cellSize);
-    int hoverCol = (int)(mousePos.x / cellSize);
+
+
+    int hoverRow = (int)((mousePos.y - offset) / cellSize);
+    int hoverCol = (int)((mousePos.x - offset) / cellSize);
+
+    hoverRow = (hoverRow < 0) ? 0 : (hoverRow >= rows) ? rows - 1 : hoverRow;
+    hoverCol = (hoverCol < 0) ? 0 : (hoverCol >= cols) ? cols - 1 : hoverCol;
 
     for (int i = 0; i < rows; i++) {
         for (int j = 0; j < cols; j++) {
-            Rectangle cellRect = { (float)j * cellSize, (float)i * cellSize, (float)cellSize, (float)cellSize };
+      
+            Rectangle cellRect = { 
+                (float)j * cellSize + offset, 
+                (float)i * cellSize + offset, 
+                (float)cellSize, 
+                (float)cellSize 
+            };
             DrawRectangleLinesEx(cellRect, 1, LIGHTGRAY);
 
-            if(grid[i][j] != nullptr) {
-                drawNode(grid[i][j], i, j, cellSize);
-
-                if(grid[i][j]->getDataBuffer().size() > 0) {
-                    string buffer = "";
-                    for(IncomingData data : grid[i][j]->getDataBuffer()) {
+            if (grid[i][j] != nullptr) {
+                drawNode(grid[i][j], i, j, cellSize, offset); 
+        
+                if (grid[i][j]->getDataBuffer().size() > 0) {
+                    std::string buffer = "";
+                    for (IncomingData& data : grid[i][j]->getDataBuffer()) {
                         buffer += data.getData();
                     }
 
-                    DrawText(buffer.c_str(), j * cellSize, i * cellSize, 30, BLACK);
+                    DrawText(buffer.c_str(), 
+                             (int)(j * cellSize + offset), 
+                             (int)(i * cellSize + offset), 
+                             30, BLACK);
                 }
-
             }
 
-            if (tempNode != nullptr) {
-                // clamp to grid bounds
-                hoverRow = (hoverRow < 0) ? 0 : (hoverRow > rows - 1) ? rows - 1 : hoverRow;
-                hoverCol = (hoverCol < 0) ? 0 : (hoverCol > cols - 1) ? cols - 1 : hoverCol;
 
-                drawNode(tempNode, hoverRow, hoverCol, cellSize);
+            if (tempNode != nullptr && i == hoverRow && j == hoverCol) {
+                drawNode(tempNode, hoverRow, hoverCol, cellSize, offset);
             }
         }
     }
