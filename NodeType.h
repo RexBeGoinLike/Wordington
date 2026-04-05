@@ -6,5 +6,6 @@ enum NodeType {
     INTERSECTION,
     RECEIVER,
     CORNERLOG,
+    CORNERLOGL,
     COUNT
 };

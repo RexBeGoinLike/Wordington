@@ -8,6 +8,7 @@ Texture2D tileTexture;
 Texture2D duplicatorTexture;
 Texture2D intersectionTexture;
 Texture2D receiverTexture;
+Texture2D cornerLogLTexture;
 
 void Grid::LoadGridAssets() {
 
@@ -15,6 +16,7 @@ void Grid::LoadGridAssets() {
     Image sourceNodeImage = LoadImage("assets/source.png");
     Image logisticsNodeImage = LoadImage("assets/logistics.png");
     Image cornerLogImage = LoadImage("assets/logisticscorner.png");
+    Image cornerLogLImage = LoadImage("assets/logisticscornerl.png");
     Image filterNodeImage = LoadImage("assets/filter.png");
     Image tileImage = LoadImage("assets/tile.png");
     Image duplicatorImage = LoadImage("assets/duplicator.png");
@@ -24,6 +26,7 @@ void Grid::LoadGridAssets() {
     ImageResize(&sourceNodeImage, cellsize, cellsize);
     ImageResize(&logisticsNodeImage, cellsize, cellsize);
     ImageResize(&cornerLogImage, cellsize, cellsize);
+    ImageResize(&cornerLogLImage, cellsize, cellsize);
     ImageResize(&filterNodeImage, cellsize, cellsize);
     ImageResize(&tileImage, cellsize, cellsize);
     ImageResize(&duplicatorImage, cellsize, cellsize);
@@ -33,6 +36,7 @@ void Grid::LoadGridAssets() {
     sourceTexture = LoadTextureFromImage(sourceNodeImage);
     logisticsTexture = LoadTextureFromImage(logisticsNodeImage);
     cornerLogTexture = LoadTextureFromImage(cornerLogImage);
+    cornerLogLTexture = LoadTextureFromImage(cornerLogLImage);
     filterTexture = LoadTextureFromImage(filterNodeImage);
     tileTexture = LoadTextureFromImage(tileImage);
     duplicatorTexture = LoadTextureFromImage(duplicatorImage);
@@ -48,6 +52,7 @@ Texture2D* getTexture(NodeType type)
         case NodeType::RECEIVER: return &receiverTexture;
         case NodeType::LOGISTICS: return &logisticsTexture;
         case NodeType::CORNERLOG: return &cornerLogTexture;
+        case NodeType::CORNERLOGL: return &cornerLogLTexture;
         case NodeType::MERGE: return &filterTexture;
         case NodeType::DUPLICATOR: return &duplicatorTexture;
         case NodeType::INTERSECTION: return &intersectionTexture;
@@ -61,41 +66,52 @@ Grid::Grid(int r, int c, int size, int offset) : rows(r), cols(c), cellSize(size
 
 void Grid::drawNode(Node* node, int row, int col, int cellSize, int offset, int temp)
 {
-    int rotation = 0;
-    int mask = node->getOutputDirection();
+    if (!node) return;
 
-    if (mask & UP) rotation = 0;
-    else if (mask & RIGHT) rotation = 90;
-    else if (mask & DOWN) rotation = 180;
-    else if (mask & LEFT) rotation = 270;
+    int rotation = 0; 
+    Texture2D* texture = nullptr;
 
-    Texture2D* texture = getTexture(node->getType());
+    if (node->getType() == CORNERLOG || node->getType() == CORNERLOGL) {
+            int in  = node->getInputDirection();
+            int out = node->getOutputDirection();
+
+            texture = getTexture(node->getType());
+
+            if (in & DOWN) rotation = 0;
+            else if (in & LEFT) rotation = 90;
+            else if (in & UP) rotation = 180;
+            else if (in & RIGHT) rotation = 270;
+    }
+    else {
+        int mask = node->getOutputDirection();
+        if (mask & UP) rotation = 0;
+        else if (mask & RIGHT) rotation = 90;
+        else if (mask & DOWN) rotation = 180;
+        else if (mask & LEFT) rotation = 270;
+
+        texture = getTexture(node->getType());
+    }
+
     if (!texture) return;
 
     Rectangle sourceRec = { 0, 0, (float)texture->width, (float)texture->height };
-
     Rectangle destRec =
     {
-        (float)col * cellSize + cellSize/2.0f + offset, 
+        (float)col * cellSize + cellSize/2.0f + offset,
         (float)row * cellSize + cellSize/2.0f + offset,
         (float)cellSize,
         (float)cellSize
     };
 
     Vector2 origin = { cellSize/2.0f, cellSize/2.0f };
-    
-    if(temp){
-        if(!grid[row][col]){
-            Color color = { 0, 255, 0, 128 };
-            DrawTexturePro(*texture, sourceRec, destRec, origin, rotation, color);
-        }else{
-            Color color = { 255, 0, 0, 128 };
-            DrawTexturePro(*texture, sourceRec, destRec, origin, rotation, color);  
-        }          
-    }else{
-            DrawTexturePro(*texture, sourceRec, destRec, origin, rotation, WHITE);       
+
+    if (temp) {
+        Color color = (!grid[row][col]) ? Color{0,255,0,128} : Color{255,0,0,128};
+        DrawTexturePro(*texture, sourceRec, destRec, origin, rotation, color);
     }
-    
+    else {
+        DrawTexturePro(*texture, sourceRec, destRec, origin, rotation, WHITE);
+    }
 }
 
 void Grid::drawGrid(Node* tempNode) {
@@ -128,10 +144,11 @@ void Grid::drawGrid(Node* tempNode) {
                         buffer += data.getData();
                     }
 
+                    if(grid[i][j]->getType() != LOGISTICS && grid[i][j]->getType() != CORNERLOG && grid[i][j]->getType() != CORNERLOGL && grid[i][j]->getType() != INTERSECTION)
                     DrawText(buffer.c_str(), 
                              (int)(j * cellSize + offset), 
                              (int)(i * cellSize + offset), 
-                             20, BLACK);
+                             15, BLACK);
                 }
             }
 
@@ -144,7 +161,7 @@ void Grid::drawGrid(Node* tempNode) {
                     buffer += data.getData();
                 }
 
-                buffer = (buffer == " ") ? "' '" : buffer;
+                buffer = (buffer == " ") ? "" "" : buffer;
                 DrawText(buffer.c_str(), 
                             (int)(j * cellSize + offset), 
                             (int)(i * cellSize + offset), 

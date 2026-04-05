@@ -12,6 +12,8 @@ IncomingData SourceNode::processData(){
 
 void SourceNode::update(){
     sendData(processData());
+    if(getDataBuffer().size() < 1)
+        getDataBuffer().push_back(processData());
 }
 
 Node* SourceNode::clone(){                  

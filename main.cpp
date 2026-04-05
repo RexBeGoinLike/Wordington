@@ -15,12 +15,20 @@ using namespace std;
 
 int main () {
 
-    const int SCREEN_WIDTH = 950;
-    const int SCREEN_HEIGHT = 950;
+    const int SCREEN_WIDTH = 1000;
+    const int SCREEN_HEIGHT = 1000;
     const int gridRows = 10;
     const int gridCols = 10;
     const int cellSize = 67;
     const int offset = (SCREEN_WIDTH - (gridCols * cellSize)) / 2;
+    vector<string> tooltips = {
+        "Outputs the indicated character at the top left towards the direction of the green arrow.\nChange the output by pressing a LETTER or the SPACE key on your keyboard",
+        "Transports a letter from one node to another in the indicated direction.",
+        "Merges the inputs into the indicated output.\nCharacters are merged in the order UP | LEFT | RIGHT | DOWN, ignoring the output side.",
+        "Duplicates an input towards the three indicated output directions.",
+        "Allows connections to intersect by directing inputs towards their opposite direction.",
+        "Checks if the input matches the target sentence (REQUIRED TO COMPLETE A SENTENCE)."
+    };
 
     int selected = 1;
 
@@ -135,8 +143,9 @@ int main () {
             label = "Press TAB to rotate a component";
             DrawText(label.c_str(), (SCREEN_WIDTH - ((int) MeasureText(label.c_str(), labelsize)))/2, (offset - labelsize)/2 + (labelsize*2.9), labelsize, BLACK);
 
+            labelsize = 20;
+            DrawText(tooltips[selected - 1].c_str(), (SCREEN_WIDTH - ((int) MeasureText(tooltips[selected - 1].c_str(), labelsize)))/2, (SCREEN_HEIGHT - offset) + labelsize*2, labelsize, BLACK);
 
-            
             
         EndDrawing();
     }

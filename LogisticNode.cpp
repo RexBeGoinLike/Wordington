@@ -46,7 +46,7 @@ void LogisticNode::onPlace(Grid *grid) {
         
         for (Node* node : grid->getAdjacentNodesInDirection(getRow(), getCol(), leftDir)) {
             if (node->getInputDirection() & getOppositeDirection(leftDir)) {
-                setType(CORNERLOG);
+                setType(CORNERLOGL);
                 setOutputDirection(leftDir);
 
                 addOutputConnection(node);
