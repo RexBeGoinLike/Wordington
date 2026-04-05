@@ -15,12 +15,12 @@ using namespace std;
 
 int main () {
 
-    const int SCREEN_WIDTH = 1920;
-    const int SCREEN_HEIGHT = 1080;
-    const int gridRows = 18;
-    const int gridCols = 35;
-    const int cellSize = 50;
-    const int offset(100);
+    const int SCREEN_WIDTH = 800;
+    const int SCREEN_HEIGHT = 800;
+    const int gridRows = 8;
+    const int gridCols = 8;
+    const int cellSize = 67;
+    const int offset = (SCREEN_WIDTH - (gridCols * cellSize)) / 2;
 
     Grid grid(gridRows, gridCols, cellSize, offset);
 
@@ -41,14 +41,35 @@ int main () {
 
     while (WindowShouldClose() == false){
 
-    if (IsMouseButtonPressed(MOUSE_LEFT_BUTTON)) {
-        Vector2 mousePos = GetMousePosition();
+        if (IsMouseButtonPressed(MOUSE_LEFT_BUTTON)) {
+            Vector2 mousePos = GetMousePosition();
 
-        int row = (int)((mousePos.y - offset) / cellSize);
-        int col = (int)((mousePos.x - offset) / cellSize);
+            int row = (int)((mousePos.y - offset) / cellSize);
+            int col = (int)((mousePos.x - offset) / cellSize);
 
-        nodeList.push_back(grid.updateCell(row, col, newNode));
-    }
+            Node* node = grid.updateCell(row, col, newNode);
+            if (node)
+                nodeList.push_back(node);
+        }
+
+        if (IsKeyPressed(KEY_DELETE)) {
+            Vector2 mousePos = GetMousePosition();
+
+            int row = (int)((mousePos.y - offset) / cellSize);
+            int col = (int)((mousePos.x - offset) / cellSize);
+
+            Node* node = grid.removeNode(row, col);
+
+            if (node != nullptr) {
+                auto it = std::find(nodeList.begin(), nodeList.end(), node);
+                if (it != nodeList.end()) {
+                    nodeList.erase(it);
+                }
+            }
+
+            node = nullptr;
+        }
+    
 
         if (IsKeyPressed(KEY_ONE)){
             newNode = new SourceNode(1, 1, 1, DOWN, UP, 0, 1, 1, 1);
@@ -90,10 +111,12 @@ int main () {
 
         BeginDrawing();
             ClearBackground(WHITE);
-            
+            string label = "BUILD THE SENTENCE: ";
             grid.drawGrid(newNode); 
-            int fontsize = 40; 
-            DrawText(("Build The Sentence: " + generatedText).c_str(), offset, offset - fontsize - (fontsize/2), fontsize, BLACK);
+            int labelsize = 25;
+            DrawText(label.c_str(), (SCREEN_WIDTH - ((int) MeasureText(label.c_str(), labelsize)))/2, (offset - labelsize)/2 - (labelsize*1.5), labelsize, BLACK);
+            int fontsize = 30; 
+            DrawText((generatedText).c_str(), (SCREEN_WIDTH - ((int) MeasureText(generatedText.c_str(), fontsize)))/2, (offset - fontsize)/2, fontsize, BLACK);
             
         EndDrawing();
     }

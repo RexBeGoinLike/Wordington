@@ -119,7 +119,7 @@ void Grid::drawGrid(Node* tempNode) {
                     DrawText(buffer.c_str(), 
                              (int)(j * cellSize + offset), 
                              (int)(i * cellSize + offset), 
-                             30, BLACK);
+                             15, BLACK);
                 }
             }
 
@@ -133,21 +133,27 @@ void Grid::drawGrid(Node* tempNode) {
 
 
 Node* Grid::updateCell(int row, int col, Node* node) {
-    if (row >= 0 && row < rows && col >= 0 && col < cols) {
-        Node* newNode = node->clone();
-        grid[row][col] = newNode;
-        newNode->setRow(row);
-        newNode->setCol(col);
-        newNode->onPlace(this);
-        
-        cout << "Placed at: " << row << " " << col << endl;
-        cout << "Node Placed at: " << newNode->getRow() << " " << newNode->getCol() << endl;
-        
-        cout << "Node Type: " << newNode->getType() << endl;
-        cout << newNode->getInputConnections().size() << " " << newNode->getOutputConnections().size() << endl;
-        return newNode;
+
+    if (row < 0 || row >= rows || col < 0 || col >= cols)
+        return nullptr;
+
+    if (grid[row][col] != nullptr) {
+        std::cout << "Cannot place node at (" << row << ", " << col << ") — cell already occupied." << std::endl;
+        return nullptr;
     }
-    return nullptr;
+
+    Node* newNode = node->clone();
+    grid[row][col] = newNode;
+    newNode->setRow(row);
+    newNode->setCol(col);
+    newNode->onPlace(this);
+
+    std::cout << "Placed at: " << row << " " << col << std::endl;
+    std::cout << "Node Placed at: " << newNode->getRow() << " " << newNode->getCol() << std::endl;
+    std::cout << "Node Type: " << newNode->getType() << std::endl;
+    std::cout << newNode->getInputConnections().size() << " " << newNode->getOutputConnections().size() << std::endl;
+
+    return newNode;
 }
 
 vector<Node*> Grid::getAdjacentNodesInDirection(int row, int col, int dirMask) {
@@ -170,4 +176,23 @@ vector<Node*> Grid::getAdjacentNodesInDirection(int row, int col, int dirMask) {
         adjacentNodes.push_back(grid[row][col+1]);
 
     return adjacentNodes;
+}
+
+Node* Grid::removeNode(int row, int col){
+    if (row < 0 || row >= rows || col < 0 || col >= cols) return nullptr;
+
+    Node* node = grid[row][col];
+    if (!node) return nullptr;
+
+    for (Node* outputNode : node->getOutputConnections()){
+        outputNode->removeInputConnection(node);
+    }
+
+    for (Node* inputNode : node->getInputConnections()){
+        inputNode->removeOutputConnection(node);
+    }
+
+    grid[row][col] = nullptr;
+
+    return node; 
 }
