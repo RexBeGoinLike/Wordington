@@ -6,7 +6,9 @@
 void LogisticNode::update() {
     IncomingData data = getDataBuffer().empty() ? IncomingData() : getDataBuffer()[0];
     data.setDirection((Direction) getOutputDirection());
-    sendData(data);
+
+    if(!getDataBuffer().empty())
+        sendData(data);
 }
 
 Node* LogisticNode::clone() {

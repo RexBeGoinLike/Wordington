@@ -7,7 +7,6 @@
 void IntersectionNode::sendData(IncomingData data){
     for(Node* outputNode : getOutputConnections()) {
         std::vector<Node*> oppositeNode = grid->getAdjacentNodesInDirection(getRow(), getCol(), data.getDirection());
-        cout << (Direction) data.getDirection();
         if (!oppositeNode.empty() && outputNode == oppositeNode[0]) {
             if(!outputNode->isFull()){
                 outputNode->receiveData(data);
