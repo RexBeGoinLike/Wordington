@@ -1,5 +1,7 @@
 #include "Grid.h"
 #include <iostream>
+#include <ranges>
+#include <algorithm>
 Texture2D sourceTexture;
 Texture2D logisticsTexture;
 Texture2D cornerLogTexture;
@@ -71,7 +73,7 @@ void Grid::drawNode(Node* node, int row, int col, int cellSize, int offset, int 
     int rotation = 0; 
     Texture2D* texture = nullptr;
 
-    if (node->getType() == CORNERLOG || node->getType() == CORNERLOGL) {
+    if (node->getType() == CORNERLOG || node->getType() == CORNERLOGL || node->getType() == DUPLICATOR || node->getType() == RECEIVER) {
             int in  = node->getInputDirection();
             int out = node->getOutputDirection();
 
@@ -140,6 +142,7 @@ void Grid::drawGrid(Node* tempNode) {
         
                 if (grid[i][j]->getDataBuffer().size() > 0) {
                     std::string buffer = "";
+                    
                     for (IncomingData& data : grid[i][j]->getDataBuffer()) {
                         buffer += data.getData();
                     }
@@ -161,7 +164,7 @@ void Grid::drawGrid(Node* tempNode) {
                     buffer += data.getData();
                 }
 
-                buffer = (buffer == " ") ? "" "" : buffer;
+                buffer = (buffer == " ") ? "_" : buffer;
                 DrawText(buffer.c_str(), 
                             (int)(j * cellSize + offset), 
                             (int)(i * cellSize + offset), 

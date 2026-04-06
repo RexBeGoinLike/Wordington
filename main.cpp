@@ -63,7 +63,7 @@ int main () {
                 nodeList.push_back(node);
         }
 
-        if (IsKeyPressed(KEY_DELETE)) {
+        if (IsMouseButtonPressed(MOUSE_BUTTON_RIGHT)) {
             Vector2 mousePos = GetMousePosition();
 
             int row = (int)((mousePos.y - offset) / cellSize);
@@ -83,7 +83,7 @@ int main () {
     
 
         if (IsKeyPressed(KEY_ONE)){
-            newNode = new SourceNode(1, 1, 1, DOWN, UP, 0, 1, 1, 1);
+            newNode = new SourceNode(1, 1, 1, NULL, UP, 0, 1, 1, 1);
             selected = 1;
         }else if (IsKeyPressed(KEY_TWO)){
             newNode = new LogisticNode(2, 1, 1, DOWN, UP, 1, 1, 1, 1);
@@ -95,10 +95,10 @@ int main () {
             newNode = new DuplicatorNode(4, 1, 1, DOWN, (UP | LEFT | RIGHT), 1, 3, 1, 1, &grid);
             selected = 4;
         }else if (IsKeyPressed(KEY_FIVE)){
-            newNode = new IntersectionNode(5, 2, 1, (LEFT | DOWN), (UP | RIGHT), 2, 2, 1, 1, &grid);
+            newNode = new IntersectionNode(5, 2, 1, (LEFT | DOWN | UP | RIGHT), (LEFT | DOWN | UP | RIGHT), 4, 4, 1, 1, &grid);
             selected = 5;
         }else if (IsKeyPressed(KEY_SIX)){
-            newNode = new OutputNode (6, 1, 1, DOWN, UP, 1, 0, 1, 1, &generatedText, &reader);
+            newNode = new OutputNode (6, 1, 1, DOWN, NULL, 1, 0, 1, 1, &generatedText, &reader);
             selected = 6;
         }
         
@@ -138,14 +138,13 @@ int main () {
             DrawText(label.c_str(), (SCREEN_WIDTH - ((int) MeasureText(label.c_str(), labelsize)))/2, (offset - labelsize)/2 - (labelsize*1.5), labelsize, BLACK);
             int fontsize = 30; 
             DrawText((generatedText).c_str(), (SCREEN_WIDTH - ((int) MeasureText(generatedText.c_str(), fontsize)))/2, (offset - fontsize)/2, fontsize, BLACK);
-            label = "Press DEL to remove a component";
+            label = "Press RIGHT MOUSE BUTTON to remove a component";
             DrawText(label.c_str(), (SCREEN_WIDTH - ((int) MeasureText(label.c_str(), labelsize)))/2, (offset - labelsize)/2 + (labelsize*1.7), labelsize, BLACK);
             label = "Press TAB to rotate a component";
             DrawText(label.c_str(), (SCREEN_WIDTH - ((int) MeasureText(label.c_str(), labelsize)))/2, (offset - labelsize)/2 + (labelsize*2.9), labelsize, BLACK);
 
             labelsize = 18;
             DrawText(tooltips[selected - 1].c_str(), (SCREEN_WIDTH - ((int) MeasureText(tooltips[selected - 1].c_str(), labelsize)))/2, (SCREEN_HEIGHT - offset) + labelsize*2, labelsize, BLACK);
-
             
         EndDrawing();
     }
